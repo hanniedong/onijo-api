@@ -15,7 +15,7 @@ export class AppModule {
       controllers: [AppController],
       imports: [
         AuthModule,
-        // UsersModule,
+        UsersModule,
         TypeOrmModule.forRoot(connOptions),
       ],
       providers: [AppService],
