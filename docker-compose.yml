@@ -1,0 +1,15 @@
+services:
+  onijo_db:
+    image: postgres:11
+    ports: 
+      - '5445:5432'
+    environment:
+      - POSTGRES_USER=onijo
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=onijo_db
+      - PG_DATA=/var/lib/postgresql/data
+    volumes:
+      - onijopgdata:/var/lib/postgresql/data
+
+volumes:
+    onijopgdata:
