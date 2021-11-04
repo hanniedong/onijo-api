@@ -13,11 +13,14 @@
       "es2015"
     ],
     "paths": {
-      "@todo/*": [
-        "src/*"
-      ],
       "@utils/*": [
         "src/utils/*"
+      ],
+      "@users/*": [
+        "src/users/*"
+      ],
+      "@mappers/*": [
+        "src/mappers/*"
       ]
     }
   },
