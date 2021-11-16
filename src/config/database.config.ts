@@ -22,15 +22,4 @@ export const getDatabaseConfig = (): object => {
     return defaults;
 };
 
-export const getRedisConfig = (): object => ({
-    redis: process.env.REDIS_URL || 'redis://localhost:7379'
-});
-
-export const getTestRedisConfig = (): object => ({
-    redis: {
-        host: process.env.REDIS_TEST_URL || 'localhost',
-        port: process.env.REDIS_TEST_PORT || 7380,
-    },
-});
-
 export default defaults

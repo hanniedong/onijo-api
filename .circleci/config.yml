@@ -1,0 +1,106 @@
+environmental_vars: &environmental_vars
+  IMAGE_NAME: onijo
+
+pull_docker_compose: &pull_docker_compose
+  name: Pull docker-compose
+  command: |
+    cp docker-compose.ci.yml docker-compose.override.yml
+version: 2.1
+jobs:
+  docker_build_test_and_run:
+    docker:
+      - image: circleci/node:12.16.1
+    steps:
+      - checkout
+      - run:
+          <<: *pull_docker_compose
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Clean docker
+          command: |
+            # stop and remove containers and volumes
+            docker-compose down -v
+      - run:
+          name: Write pipeline number to file
+          command: |
+            printf << pipeline.number >> > BUILDNUM.txt
+      - run:
+          name: Build and Start services
+          command: |
+            docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+            docker-compose pull --include-deps onijo
+            docker-compose up -d --build onijo
+      - run:
+          name: Run Migrations
+          command: |
+            docker-compose run --no-deps --rm onijo yarn typeorm:migrate
+      - run:
+          name: ESLint
+          command: |
+            docker-compose run --no-deps --rm onijo yarn lint
+  docker_push:
+    docker:
+      - image: circleci/node:12.22.0
+    environment:
+      <<: *environmental_vars
+    steps:
+      - checkout
+      - run:
+          <<: *pull_docker_compose
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Write pipeline number to file
+          command: |
+            printf << pipeline.number >> > BUILDNUM.txt
+      - run:
+          name: Build docker image
+          command: |
+            docker-compose build
+      - run:
+          name: Add git tag and push docker image
+          command: |
+            VERSION_TAG="$(eval node -p "require\(\'./package.json\'\).version").<< pipeline.number >>"
+            git tag $VERSION_TAG
+            git push origin $VERSION_TAG
+            docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$VERSION_TAG
+            docker push $IMAGE_NAME
+  deploy:
+    docker:
+      - image: circleci/node:12.22.0
+    environment:
+      <<: *environmental_vars
+    steps:
+      - checkout
+      - run:
+          name: Install Heroku CLI
+          command: |
+            curl -o aptible-cli.deb "https://omnibus-aptible-toolbelt.s3.amazonaws.com/aptible/omnibus-aptible-toolbelt/master/176/pkg/aptible-toolbelt_0.16.1%2B20180730142023~ubuntu.16.04-1_amd64.deb"
+            sudo dpkg -i aptible-cli.deb
+      - run:
+          name: Deploy on Heroku
+          command: |
+            VERSION_TAG="$(eval node -p "require\(\'./package.json\'\).version").<< pipeline.number >>"
+            aptible login --email=$APTIBLE_USER --password=$APTIBLE_PASSWORD
+            aptible deploy --app $APP_NAME --environment $DEPLOY_ENV --docker-image $IMAGE_NAME:$VERSION_TAG --private-registry-username $DOCKER_USER --private-registry-password $DOCKER_PASSWORD
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - docker_build_test_and_run
+      - docker_push:
+          requires:
+            - docker_build_test_and_run
+          filters:
+            branches:
+              only:
+                - main
+      - deploy:
+          requires:
+            - docker_push
+          filters:
+            branches:
+              only:
+                - main
