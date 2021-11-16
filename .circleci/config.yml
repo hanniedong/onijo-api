@@ -9,7 +9,7 @@ version: 2.1
 jobs:
   docker_build_test_and_run:
     docker:
-      - image: circleci/node:12.22.0
+      - image: circleci/node:12.16.1
     steps:
       - checkout
       - run:
@@ -41,7 +41,7 @@ jobs:
             docker-compose run --no-deps --rm onijo yarn lint
   docker_push:
     docker:
-      - image: circleci/node:12.22.0
+      - image: circleci/node:12.16.1
     environment:
       <<: *environmental_vars
     steps:
@@ -69,7 +69,7 @@ jobs:
             docker push $IMAGE_NAME
   deploy:
     docker:
-      - image: circleci/node:12.22.0
+      - image: circleci/node:12.16.1
     environment:
       <<: *environmental_vars
     steps:
