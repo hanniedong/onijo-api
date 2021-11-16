@@ -1,5 +1,5 @@
 environmental_vars: &environmental_vars
-  IMAGE_NAME: onijo
+  IMAGE_NAME: hanniedong117/onijo
 
 pull_docker_compose: &pull_docker_compose
   name: Pull docker-compose
