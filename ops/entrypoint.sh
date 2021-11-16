@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 if [[ "$WAIT_FOR_DB" = "true" ]]; then
