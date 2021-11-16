@@ -38,6 +38,8 @@ export class AuthController {
 
     @Post('login')
     public async login(@Body() loginUserDto: LoginUserDto): Promise<LoginStatus> {
+        console.log("HIT")
+        console.log(await this.authService.login(loginUserDto))
         return await this.authService.login(loginUserDto);
     }
 
