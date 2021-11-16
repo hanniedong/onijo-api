@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   onijo:
+    container_name: onijo
     image: hanniedong117/onijo:latest
     ports:
       - 5000:5000
