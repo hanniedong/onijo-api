@@ -19,6 +19,7 @@ export const defaults = {
 };
 
 export const getDatabaseConfig = (): object => {
+    console.log(defaults)
     return defaults;
 };
 
