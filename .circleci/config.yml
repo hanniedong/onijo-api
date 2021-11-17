@@ -67,6 +67,23 @@ jobs:
             docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
             docker tag $IMAGE_NAME:latest $IMAGE_NAME:$VERSION_TAG
             docker push $IMAGE_NAME
+  deploy:
+    docker:
+      - image: circleci/node:12.16.1
+    environment:
+      <<: *environmental_vars
+    steps:
+      - checkout
+      - run:
+          name: Install Heroku CLI
+          command: |
+            curl https://cli-assets.heroku.com/install.sh | sh
+      - run:
+          name: Deploy on Heroku
+          command: |
+            VERSION_TAG="$(eval node -p "require\(\'./package.json\'\).version").<< pipeline.number >>"
+            aptible login --email=$APTIBLE_USER --password=$APTIBLE_PASSWORD
+            aptible deploy --app $APP_NAME --environment $DEPLOY_ENV --docker-image $IMAGE_NAME:$VERSION_TAG --private-registry-username $DOCKER_USER --private-registry-password $DOCKER_PASSWORD
 workflows:
   version: 2
   build_and_test:
@@ -75,6 +92,13 @@ workflows:
       - docker_push:
           requires:
             - docker_build_test_and_run
+          filters:
+            branches:
+              only:
+                - main
+      - deploy:
+          requires:
+            - docker_push
           filters:
             branches:
               only:
