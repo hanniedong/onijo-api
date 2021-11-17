@@ -3,6 +3,8 @@ services:
   onijo:
     container_name: onijo
     image: hanniedong117/onijo:latest
+    build:
+      context: .
     ports:
       - 5000:5000
     environment:
