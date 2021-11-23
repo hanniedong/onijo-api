@@ -19,7 +19,6 @@ import { GraphQLModule } from '@nestjs/graphql';
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       definitions: {
-        path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',
       },
       debug: true,

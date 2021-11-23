@@ -5,6 +5,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import { jwtSecret } from './auth.constants';
 
 TODO: 'REVIST SECRET AND SIGNOOPTIONS'
 
@@ -13,11 +14,9 @@ TODO: 'REVIST SECRET AND SIGNOOPTIONS'
     UsersModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
-      property: 'user',
-      session: false,
     }),
     JwtModule.register({
-      secret: 'secret',
+      secret: jwtSecret,
       signOptions: {
         expiresIn: 1000000,
       },
