@@ -17,10 +17,8 @@ import { GraphQLModule } from '@nestjs/graphql';
     UsersModule,
     TypeOrmModule.forRoot(getDatabaseConfig()),
     GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql'],
-      definitions: {
-        outputAs: 'class',
-      },
+      installSubscriptionHandlers: true,
+      autoSchemaFile: true,
       debug: true,
       playground: true,
       context: ({ req }) => ({

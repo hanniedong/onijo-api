@@ -19,6 +19,10 @@ export abstract class IQuery {
   abstract user(id: string): Nullable<User> | Promise<Nullable<User>>;
 }
 
+// export abstract class IMutation {
+//     abstract createUser(createUserInput?: Nullable<createUserInput>): Nullable<User> | Promise<Nullable<User>>;
+// }
+
 export abstract class ISubscription {
   abstract userCreated(): Nullable<User> | Promise<Nullable<User>>;
 }
