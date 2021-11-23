@@ -1,7 +1,7 @@
 import { toUserDto } from "@mappers/user.mapper";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserInterface } from "src/auth/interfaces/user.interface";
+import { UserInterface } from "src/interfaces/user.interface";
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDto } from "./dto/user.dto";

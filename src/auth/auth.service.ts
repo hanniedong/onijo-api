@@ -6,7 +6,8 @@ import { comparePasswords } from '@utils/password.utils';
 
 import { UsersService } from '../users/users.service';
 import { jwtSecret } from './auth.constants';
-import { UserInterface } from './interfaces/user.interface';
+import { UserInterface } from '../interfaces/user.interface';
+import { LoginInterface } from 'src/interfaces/login.interface';
 
 
 @Injectable()
@@ -27,14 +28,16 @@ export class AuthService {
     return passwordIsValid ? user : null;
   }
 
-  login(user: UserEntity): { access_token: string } {
+  async login(user): Promise<LoginInterface> {
     const payload = {
       email: user.email,
       sub: user.id
     }
 
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
+      username: user.username,
+      id: user.id
     }
   }
 
