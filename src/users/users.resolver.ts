@@ -20,7 +20,7 @@ export class UsersResolver {
 
   @Query(() => UserEntity, { name: 'user', nullable: true })
   @UseGuards(GqlAuthGuard)
-  async getUser(@Args() getUserArgs: GetUserArgs): Promise<UserInterface> {
+  async getUser(@CurrentUser user: UserEntity @Args() getUserArgs: GetUserArgs): Promise<UserInterface> {
     console.log("args", getUserArgs)
     return await this.usersService.findUser(getUserArgs);
   }

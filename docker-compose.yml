@@ -23,7 +23,7 @@ services:
     ports:
       - '5445:5432'
     environment:
-      - POSTGRES_USER=banana
+      - POSTGRES_USER=onijo
       - POSTGRES_PASSWORD=onijo
       - POSTGRES_DB=onijo_db
       - PG_DATA=/var/lib/postgresql/data
