@@ -89,8 +89,8 @@ jobs:
           command: |
             docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
             docker tag $IMAGE_NAME registry.heroku.com/onijo-server/web
+            docker login --username="$DOCKER_USER" --password="$HEROKU_TOKEN" registry.heroku.com
             docker push registry.heroku.com/onijo-server/web
-            heroku container:release web -a=onijo-server
 workflows:
   version: 2
   build_and_test:
