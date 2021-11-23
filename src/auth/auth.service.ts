@@ -1,9 +1,12 @@
+import { toUserDto } from '@mappers/user.mapper';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '@users/entitites/user.entity';
+import { comparePasswords } from '@utils/password.utils';
 
 import { UsersService } from '../users/users.service';
 import { jwtSecret } from './auth.constants';
+import { UserInterface } from './interfaces/user.interface';
 
 
 @Injectable()
@@ -13,14 +16,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) { }
 
-  validate(email: string, password: string): UserEntity | null {
-    const user = this.usersService.getUserByEmail(email);
+  async validate(email: string, password: string): Promise<UserEntity> | null {
+    const user = await this.usersService.findUser({ email: email });
 
     if (!user) {
       return null;
     }
 
-    const passwordIsValid = password === user.password;
+    const passwordIsValid = comparePasswords(password, user.password);
     return passwordIsValid ? user : null;
   }
 
@@ -35,12 +38,12 @@ export class AuthService {
     }
   }
 
-  verify(token: string): UserEntity {
+  async verify(token: string): Promise<UserInterface> {
     const decoded = this.jwtService.verify(token, {
       secret: jwtSecret
     })
 
-    const user = this.usersService.getUserByEmail(decoded.email);
+    const user = await this.usersService.findUser({ email: decoded.email });
 
     if (!user) {
       throw new Error('Unable to get the user from decoded token.');
