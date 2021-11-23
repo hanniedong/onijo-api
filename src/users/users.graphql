@@ -1,0 +1,26 @@
+type Query {
+  users: [User]
+  user(id: ID!): User
+}
+
+type Mutation {
+  createUser(createUserInput: createUserInput): User
+}
+
+type Subscription {
+  userCreated: User
+}
+
+type User {
+  id: String
+  username: String
+  email: String
+}
+"""
+Test comment
+"""
+input createUserInput {
+  username: String
+  email: String
+  password: String
+}
