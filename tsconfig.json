@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
+    "esModuleInterop": true,
     "lib": [
       "es2015"
     ],

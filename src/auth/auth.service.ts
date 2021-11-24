@@ -1,68 +1,57 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { CreateUserDto } from '../users/dto/user.create.dto';
-import { RegistrationStatus } from './interfaces/registration-status.interface';
-import { UsersService } from '../users/users.service';
-import { LoginStatus } from './interfaces/login-status.interface';
-import { LoginUserDto } from '../users/dto/user-login.dto';
-import { UserDto } from '../users/dto/user.dto';
-import { JwtPayload } from './interfaces/payload.interface';
+import { toUserDto } from '@mappers/user.mapper';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from '@users/entitites/user.entity';
+import { comparePasswords } from '@utils/password.utils';
+
+import { UsersService } from '../users/users.service';
+import { jwtSecret } from './auth.constants';
+import { UserInterface } from '../interfaces/user.interface';
+import { LoginInterface } from 'src/interfaces/login.interface';
+
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private readonly usersService: UsersService,
-        private readonly jwtService: JwtService,
-    ) { }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) { }
 
-    async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
-        let status: RegistrationStatus = {
-            success: true,
-            message: 'user registered',
-        };
+  async validate(email: string, password: string): Promise<UserEntity> | null {
+    const user = await this.usersService.findUser({ email: email });
 
-        try {
-            await this.usersService.create(userDto);
-        } catch (err) {
-            status = {
-                success: false,
-                message: err,
-            };
-        }
-
-        return status;
+    if (!user) {
+      return null;
     }
 
-    async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
-        // find user in db
-        const user = await this.usersService.findByLogin(loginUserDto);
+    const passwordIsValid = comparePasswords(password, user.password);
+    return passwordIsValid ? user : null;
+  }
 
-        // generate and sign token
-        const token = this._createToken(user);
-
-        return {
-            userId: user.id,
-            username: user.username,
-            ...token,
-        };
+  async login(user): Promise<LoginInterface> {
+    const payload = {
+      email: user.email,
+      sub: user.id
     }
 
-    async validateUser(payload: JwtPayload): Promise<UserDto> {
-        const user = await this.usersService.findByPayload(payload);
-        if (!user) {
-            throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
-        }
-        return user;
+    return {
+      accessToken: this.jwtService.sign(payload),
+      username: user.username,
+      id: user.id
+    }
+  }
+
+  async verify(token: string): Promise<UserInterface> {
+    const decoded = this.jwtService.verify(token, {
+      secret: jwtSecret
+    })
+
+    const user = await this.usersService.findUser({ email: decoded.email });
+
+    if (!user) {
+      throw new Error('Unable to get the user from decoded token.');
     }
 
-    private _createToken({ username }: UserDto): any {
-        const expiresIn = process.env.EXPIRESIN || 100000;
-
-        const user: JwtPayload = { username };
-        const accessToken = this.jwtService.sign(user);
-        return {
-            expiresIn,
-            accessToken,
-        };
-    }
+    return user;
+  }
 }

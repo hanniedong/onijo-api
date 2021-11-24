@@ -1,51 +1,18 @@
-import {
-    Controller,
-    Body,
-    Post,
-    HttpException,
-    HttpStatus,
-    UsePipes,
-    Get,
-    Req,
-    UseGuards,
-} from '@nestjs/common';
-import { CreateUserDto } from '../users/dto/user.create.dto';
-import { RegistrationStatus } from './interfaces/registration-status.interface';
-import { AuthService } from './auth.service';
-import { LoginStatus } from './interfaces/login-status.interface';
-import { LoginUserDto } from '../users/dto/user-login.dto';
-import { JwtPayload } from './interfaces/payload.interface';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { UserEntity } from "@users/entitites/user.entity";
+import { Request } from 'express';
+import { LoginInterface } from "src/interfaces/login.interface";
+
+import { AuthService } from "./auth.service";
+import { LocalAuthGuard } from "./guards/local-auth.guard";
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) { }
 
-    @Post('/register')
-    public async register(
-        @Body() createUserDto: CreateUserDto,
-    ): Promise<RegistrationStatus> {
-        const result: RegistrationStatus = await this.authService.register(
-            createUserDto,
-        );
-
-        if (!result.success) {
-            throw new HttpException(result.message, HttpStatus.BAD_REQUEST);
-        }
-
-        return result;
-    }
-
-    @Post('login')
-    public async login(@Body() loginUserDto: LoginUserDto): Promise<LoginStatus> {
-        console.log("HIT")
-        console.log(await this.authService.login(loginUserDto))
-        return await this.authService.login(loginUserDto);
-    }
-
-    @Get('whoami')
-    @UseGuards(AuthGuard())
-    public async testAuth(@Req() req: any): Promise<JwtPayload> {
-        return req.user;
-    }
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  async login(@Req() req: Request): Promise<LoginInterface> {
+    return await this.authService.login(req.user as UserEntity);
+  }
 }

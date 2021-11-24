@@ -1,13 +1,13 @@
 
-import { Module, DynamicModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConnectionOptions } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { getDatabaseConfig } from './config/database.config';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   controllers: [AppController],
@@ -16,7 +16,16 @@ import { getDatabaseConfig } from './config/database.config';
     AuthModule,
     UsersModule,
     TypeOrmModule.forRoot(getDatabaseConfig()),
+    GraphQLModule.forRoot({
+      installSubscriptionHandlers: true,
+      autoSchemaFile: true,
+      debug: true,
+      playground: true,
+      context: ({ req }) => ({
+        headers: req.headers,
+      }),
+    }),
   ],
   providers: [AppService],
 })
-export class AppModule{}
+export class AppModule { }
