@@ -6,7 +6,7 @@ import { GqlAuthGuard } from "../auth/guards/gql-auth.guard";
 import { UserEntity } from "./entitites/user.entity";
 import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUsersArgs } from "./dto/args/get-users.args";
-// import { CreateUserInput } from "./dto/input/create-user.input";
+import { CreateUserInput } from "./dto/input/create-user.input";
 // import { DeleteUserInput } from "./dto/input/delete-user.input";
 // import { UpdateUserInput } from "./dto/input/update-user.input";
 
@@ -29,10 +29,10 @@ export class UsersResolver {
   //   return this.usersService.getUsers(getUsersArgs);
   // }
 
-  // @Mutation(() => User)
-  // createUser(@Args('createUserData') createUserData: CreateUserInput): User {
-  //   return this.usersService.createUser(createUserData);
-  // }
+  @Mutation(() => UserEntity)
+  async createUser(@Args('createUserData') createUserData: CreateUserInput): Promise<UserInterface> {
+    return await this.usersService.createUser(createUserData);
+  }
 
   // @Mutation(() => User)
   // updateUser(@Args('updateUserData') updateUserData: UpdateUserInput): User {

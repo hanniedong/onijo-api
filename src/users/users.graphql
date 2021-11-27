@@ -16,11 +16,7 @@ type User {
   username: String
   email: String
 }
-"""
-Test comment
-"""
+
 input createUserInput {
-  username: String
-  email: String
-  password: String
+  phoneNumber: String
 }

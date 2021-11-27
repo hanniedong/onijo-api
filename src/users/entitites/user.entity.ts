@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   OneToMany,
   BeforeInsert,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Field, Int, ObjectType } from "@nestjs/graphql";
@@ -17,21 +18,33 @@ export class UserEntity {
   @Field()
   id: string;
 
-  @Column({ type: 'varchar', nullable: false, unique: true })
+  @Column({ type: 'varchar', nullable: true })
   @Field()
   username: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: true, })
   @Field()
   password: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: true })
   @Field()
   email: string;
 
-  @CreateDateColumn() createdOn?: Date;
+  @Column({ type: 'varchar', nullable: false, name: 'phone_number', unique: true })
+  @Field()
+  phoneNumber: string;
 
-  @CreateDateColumn() updatedOn?: Date;
+  @Column({ type: 'timestamptz', name: 'password_last_updated_at' })
+  passwordLastUpdatedAt: Date;
+
+  @Column({ type: 'timestamptz', name: 'last_verified_at' })
+  lastVerifiedAt: Date;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
   @BeforeInsert()
   async hashPassword() {

@@ -19,16 +19,17 @@ export class UsersService {
     private readonly userRepo: Repository<UserEntity>,
   ) { }
 
-  // public createUser(createUserData): UserEntity {
-  //   const user: UserEntity = {
-  //     userId: uuidv4(),
-  //     ...createUserData
-  //   }
-
-  //   this.users.push(user);
-
-  //   return user;
-  // }
+  async createUser(createUserData): Promise<UserEntity> {
+    const user: UserEntity = {
+      id: uuidv4(),
+      ...createUserData
+    }
+    try {
+      return await this.userRepo.save(user);
+    } catch (e) {
+      console.log(`Error creating user. Error: ${e}`)
+    }
+  }
 
   // public updateUser(updateUserData): UserEntity {
   //   const user = this.users.find(user => user.id === updateUserData.userId);
