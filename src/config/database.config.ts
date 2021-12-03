@@ -11,7 +11,7 @@ export const defaults = {
   seeds: ['src/database/seeds/**/*.seed.ts'],
   factories: ['src/database/factories/**/*.factory.ts'],
   entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
+  migrations: [__dirname + '/../migration/**/*{.ts,.js}'],
   cli: {
     "migrationsDir": "src/migration",
     "subscribersDir": "src/subscriber"

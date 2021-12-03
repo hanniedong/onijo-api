@@ -3,12 +3,14 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  OneToMany,
+  OneToOne,
   BeforeInsert,
   UpdateDateColumn,
+  JoinColumn
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { ProfileEntity } from 'src/user_profiles/entities/profile.entity';
 
 @Entity('users')
 @ObjectType()
@@ -34,16 +36,16 @@ export class UserEntity {
   @Field()
   phoneNumber: string;
 
-  @Column({ type: 'timestamptz', name: 'password_last_updated_at' })
+  @Column({ type: 'timestamptz', name: 'password_last_updated_at', nullable: true })
   passwordLastUpdatedAt: Date;
 
-  @Column({ type: 'timestamptz', name: 'last_verified_at' })
+  @Column({ type: 'timestamptz', name: 'last_verified_at', nullable: true })
   lastVerifiedAt: Date;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
 
   @BeforeInsert()
@@ -51,4 +53,9 @@ export class UserEntity {
     console.log("hashed")
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  @Field()
+  @OneToOne(() => ProfileEntity)
+  @JoinColumn()
+  profile: ProfileEntity;
 }

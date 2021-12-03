@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserInterface } from "src/interfaces/user.interface";
+import { ProfileEntity } from "src/user_profiles/entities/profile.entity";
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDto } from "./dto/user.dto";
@@ -18,6 +19,8 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
+    @InjectRepository(ProfileEntity)
+    private readonly userProfileRepo: Repository<ProfileEntity>,
   ) { }
 
   async createUser(createUserData): Promise<UserEntity> {
@@ -53,6 +56,18 @@ export class UsersService {
     }
   }
 
+  async createUserProfile(createUserProfileData): Promise<UserEntity> {
+    const { userId } = createUserProfileData
+    const user = await this.userRepo.findOne(userId)
+    const profile: ProfileEntity = {
+      ...createUserProfileData
+    }
+    await this.userProfileRepo.save(profile)
+
+    user.profile = profile
+    console.log(user)
+    return await this.userRepo.save(user)
+  }
 
   async findUser(options): Promise<UserEntity> {
     return await this.userRepo.findOne(options);

@@ -39,3 +39,13 @@ input updateUsernameInput {
   id: String
   username: String
 }
+
+type Mutation {
+  createUserProfile(createUserProfileInput: createUserProfileInput): User
+}
+
+input createUserProfileInput {
+  id: String
+  firstName: String
+  lastName: String
+}
