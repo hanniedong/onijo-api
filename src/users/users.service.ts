@@ -1,6 +1,7 @@
 import { toUserDto } from "@mappers/user.mapper";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { UserInterface } from "src/interfaces/user.interface";
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,13 +32,16 @@ export class UsersService {
     }
   }
 
-  // public updateUser(updateUserData): UserEntity {
-  //   const user = this.users.find(user => user.id === updateUserData.userId);
-
-  //   Object.assign(user, updateUserData);
-
-  //   return user;
-  // }
+  async updateUser(updateUserData): Promise<UserEntity> {
+    const { id, email, password } = updateUserData
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await this.userRepo.update(id, { email, password: hashedPassword });
+      return await this.userRepo.findOne(id)
+    } catch (e) {
+      console.log(`Error updating user. Error: ${e}`)
+    }
+  }
 
   async findUser(options): Promise<UserEntity> {
     return await this.userRepo.findOne(options);

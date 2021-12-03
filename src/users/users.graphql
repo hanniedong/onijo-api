@@ -20,3 +20,13 @@ type User {
 input createUserInput {
   phoneNumber: String
 }
+
+type Mutation {
+  updateUser(updateUserInput: updateUserInput): User
+}
+
+input updateUserInput {
+  id: String
+  email: String
+  password: String
+}

@@ -48,6 +48,7 @@ export class UserEntity {
 
   @BeforeInsert()
   async hashPassword() {
+    console.log("hashed")
     this.password = await bcrypt.hash(this.password, 10);
   }
 }

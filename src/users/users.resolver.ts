@@ -13,6 +13,7 @@ import { CreateUserInput } from "./dto/input/create-user.input";
 
 import { UsersService } from "./users.service";
 import { UserDto } from "./dto/user.dto";
+import { UpdateUserInput } from "./dto/input/update-user.input";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -34,10 +35,10 @@ export class UsersResolver {
     return await this.usersService.createUser(createUserData);
   }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserData') updateUserData: UpdateUserInput): User {
-  //   return this.usersService.updateUser(updateUserData);
-  // }
+  @Mutation(() => UserEntity)
+  async updateUser(@Args('updateUserData') updateUserData: UpdateUserInput): Promise<UserEntity> {
+    return await this.usersService.updateUser(updateUserData);
+  }
 
   // @Mutation(() => User)
   // deleteUser(@Args('deleteUserData') deleteUserData: DeleteUserInput): User {
