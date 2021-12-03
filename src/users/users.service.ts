@@ -43,6 +43,17 @@ export class UsersService {
     }
   }
 
+  async updateUsername(updateUsernameData): Promise<UserEntity> {
+    const { id, username } = updateUsernameData
+    try {
+      await this.userRepo.update(id, { username });
+      return await this.userRepo.findOne(id)
+    } catch (e) {
+      console.log(`Error updating user. Error: ${e}`)
+    }
+  }
+
+
   async findUser(options): Promise<UserEntity> {
     return await this.userRepo.findOne(options);
   }

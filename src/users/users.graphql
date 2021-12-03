@@ -30,3 +30,12 @@ input updateUserInput {
   email: String
   password: String
 }
+
+type Mutation {
+  updateUsername(updateUsernameInput: updateUsernameInput): User
+}
+
+input updateUsernameInput {
+  id: String
+  username: String
+}

@@ -17,6 +17,11 @@ export class UpdateUserInput {
   password?: Nullable<string>;
 }
 
+export class UpdateUsernameInput {
+  id?: Nullable<string>;
+  username?: Nullable<string>;
+}
+
 export abstract class IQuery {
   abstract users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 
@@ -27,6 +32,8 @@ export abstract class IMutation {
   abstract createUser(createUserInput?: Nullable<CreateUserInput>): Nullable<User> | Promise<Nullable<User>>;
 
   abstract updateUser(updateUserInput?: Nullable<UpdateUserInput>): Nullable<User> | Promise<Nullable<User>>;
+
+  abstract updateUsername(updateUsernameInput?: Nullable<UpdateUsernameInput>): Nullable<User> | Promise<Nullable<User>>;
 }
 
 export abstract class ISubscription {
