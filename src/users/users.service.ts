@@ -1,7 +1,9 @@
 import { toUserDto } from "@mappers/user.mapper";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { UserInterface } from "src/interfaces/user.interface";
+import { ProfileEntity } from "src/user_profiles/entities/profile.entity";
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDto } from "./dto/user.dto";
@@ -17,26 +19,68 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
+    @InjectRepository(ProfileEntity)
+    private readonly userProfileRepo: Repository<ProfileEntity>,
   ) { }
 
-  // public createUser(createUserData): UserEntity {
-  //   const user: UserEntity = {
-  //     userId: uuidv4(),
-  //     ...createUserData
-  //   }
+  async createUser(createUserData): Promise<UserEntity> {
+    const user: UserEntity = {
+      id: uuidv4(),
+      ...createUserData
+    }
+    try {
+      return await this.userRepo.save(user);
+    } catch (e) {
+      console.log(`Error creating user. Error: ${e}`)
+    }
+  }
 
-  //   this.users.push(user);
+  async updateUser(updateUserData): Promise<UserEntity> {
+    const { id, email, password } = updateUserData
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await this.userRepo.update(id, { email, password: hashedPassword });
+      return await this.userRepo.findOne(id)
+    } catch (e) {
+      console.log(`Error updating user. Error: ${e}`)
+    }
+  }
 
-  //   return user;
-  // }
+  async updateUsername(updateUsernameData): Promise<UserEntity> {
+    const { id, username } = updateUsernameData
+    try {
+      await this.userRepo.update(id, { username });
+      return await this.userRepo.findOne(id)
+    } catch (e) {
+      console.log(`Error updating user. Error: ${e}`)
+    }
+  }
 
-  // public updateUser(updateUserData): UserEntity {
-  //   const user = this.users.find(user => user.id === updateUserData.userId);
+  async createUserProfile(createUserProfileData): Promise<UserEntity> {
+    const { userId } = createUserProfileData
+    const user = await this.userRepo.findOne(userId)
+    const profile: ProfileEntity = {
+      ...createUserProfileData
+    }
+    await this.userProfileRepo.save(profile)
 
-  //   Object.assign(user, updateUserData);
+    user.profile = profile
+    return await this.userRepo.save(user)
+  }
 
-  //   return user;
-  // }
+  async updateUserProfile(updateUserProfileData): Promise<UserEntity> {
+    const { userId } = updateUserProfileData
+    const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
+    console.log(user)
+    const profile: ProfileEntity = {
+      ...user.profile,
+      ...updateUserProfileData
+    }
+    await this.userProfileRepo.save(profile)
+
+    user.profile = profile
+    return await this.userRepo.save(user)
+  }
 
   async findUser(options): Promise<UserEntity> {
     return await this.userRepo.findOne(options);

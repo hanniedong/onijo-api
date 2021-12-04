@@ -16,11 +16,50 @@ type User {
   username: String
   email: String
 }
-"""
-Test comment
-"""
+
 input createUserInput {
-  username: String
+  phoneNumber: String
+}
+
+type Mutation {
+  updateUser(updateUserInput: updateUserInput): User
+}
+
+input updateUserInput {
+  id: String
   email: String
   password: String
 }
+
+type Mutation {
+  updateUsername(updateUsernameInput: updateUsernameInput): User
+}
+
+input updateUsernameInput {
+  id: String
+  username: String
+}
+
+type Mutation {
+  createUserProfile(createUserProfileInput: createUserProfileInput): User
+}
+
+input createUserProfileInput {
+  userId: String
+  firstName: String
+  lastName: String
+}
+
+type Mutation {
+  updateUserProfile(updateUserProfileInput: updateUserProfileInput): User
+}
+
+input updateUserProfileInput {
+  userId: String
+  job: String
+  company: String
+  study: String
+  education: String
+  bio: String
+}
+

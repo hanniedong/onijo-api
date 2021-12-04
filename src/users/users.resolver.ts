@@ -6,13 +6,17 @@ import { GqlAuthGuard } from "../auth/guards/gql-auth.guard";
 import { UserEntity } from "./entitites/user.entity";
 import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUsersArgs } from "./dto/args/get-users.args";
-// import { CreateUserInput } from "./dto/input/create-user.input";
+import { CreateUserInput } from "./dto/input/create-user.input";
 // import { DeleteUserInput } from "./dto/input/delete-user.input";
 // import { UpdateUserInput } from "./dto/input/update-user.input";
 
 
 import { UsersService } from "./users.service";
 import { UserDto } from "./dto/user.dto";
+import { UpdateUserInput } from "./dto/input/update-user.input";
+import { UpdateUsernameInput } from "./dto/input/update-username.input";
+import { CreateUserProfileInput } from "./dto/input/create-userprofile.input";
+import { UpdateUserProfileInput } from "./dto/input/update-userprofile.input";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -29,15 +33,32 @@ export class UsersResolver {
   //   return this.usersService.getUsers(getUsersArgs);
   // }
 
-  // @Mutation(() => User)
-  // createUser(@Args('createUserData') createUserData: CreateUserInput): User {
-  //   return this.usersService.createUser(createUserData);
-  // }
+  @Mutation(() => UserEntity)
+  async createUser(@Args('createUserData') createUserData: CreateUserInput): Promise<UserInterface> {
+    return await this.usersService.createUser(createUserData);
+  }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserData') updateUserData: UpdateUserInput): User {
-  //   return this.usersService.updateUser(updateUserData);
-  // }
+  @Mutation(() => UserEntity)
+  async updateUser(@Args('updateUserData') updateUserData: UpdateUserInput): Promise<UserEntity> {
+    return await this.usersService.updateUser(updateUserData);
+  }
+
+  @Mutation(() => UserEntity)
+  async updateUsername(@Args('updateUsernameData') updateUsernameData: UpdateUsernameInput): Promise<UserEntity> {
+    console.log("HIT")
+    return await this.usersService.updateUsername(updateUsernameData);
+  }
+
+  @Mutation(() => UserEntity)
+  async createUserProfile(@Args('createUserProfileData') createUserProfileData: CreateUserProfileInput): Promise<UserEntity> {
+    return await this.usersService.createUserProfile(createUserProfileData);
+  }
+
+  @Mutation(() => UserEntity)
+  async updateUserProfile(@Args('updateUserProfileData') updateUserProfileData: UpdateUserProfileInput): Promise<UserEntity> {
+    return await this.usersService.updateUserProfile(updateUserProfileData);
+  }
+
 
   // @Mutation(() => User)
   // deleteUser(@Args('deleteUserData') deleteUserData: DeleteUserInput): User {

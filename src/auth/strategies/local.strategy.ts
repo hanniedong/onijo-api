@@ -1,10 +1,11 @@
-import { toUserDto } from "@mappers/user.mapper";
+
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { comparePasswords } from "@utils/password.utils";
 import { Strategy } from "passport-local";
 import { AuthService } from "../auth.service";
 import { UserInterface } from "../../interfaces/user.interface";
+import { toUserDto } from "@mappers/user.mapper";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
