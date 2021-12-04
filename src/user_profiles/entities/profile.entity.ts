@@ -24,6 +24,26 @@ export class ProfileEntity {
   @Column({ type: 'varchar', nullable: true })
   avatar: string;
 
+  @Field()
+  @Column({ type: 'varchar', nullable: true })
+  job: string;
+
+  @Field()
+  @Column({ type: 'varchar', nullable: true })
+  company: string;
+
+  @Field()
+  @Column({ type: 'varchar', nullable: true })
+  study: string;
+
+  @Field()
+  @Column({ type: 'varchar', nullable: true })
+  education: string;
+
+  @Field()
+  @Column({ type: 'varchar', nullable: true })
+  bio: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

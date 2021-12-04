@@ -45,7 +45,21 @@ type Mutation {
 }
 
 input createUserProfileInput {
-  id: String
+  userId: String
   firstName: String
   lastName: String
 }
+
+type Mutation {
+  updateUserProfile(updateUserProfileInput: updateUserProfileInput): User
+}
+
+input updateUserProfileInput {
+  userId: String
+  job: String
+  company: String
+  study: String
+  education: String
+  bio: String
+}
+

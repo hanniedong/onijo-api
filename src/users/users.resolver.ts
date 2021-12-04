@@ -16,6 +16,7 @@ import { UserDto } from "./dto/user.dto";
 import { UpdateUserInput } from "./dto/input/update-user.input";
 import { UpdateUsernameInput } from "./dto/input/update-username.input";
 import { CreateUserProfileInput } from "./dto/input/create-userprofile.input";
+import { UpdateUserProfileInput } from "./dto/input/update-userprofile.input";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -50,8 +51,12 @@ export class UsersResolver {
 
   @Mutation(() => UserEntity)
   async createUserProfile(@Args('createUserProfileData') createUserProfileData: CreateUserProfileInput): Promise<UserEntity> {
-    console.log(createUserProfileData)
     return await this.usersService.createUserProfile(createUserProfileData);
+  }
+
+  @Mutation(() => UserEntity)
+  async updateUserProfile(@Args('updateUserProfileData') updateUserProfileData: UpdateUserProfileInput): Promise<UserEntity> {
+    return await this.usersService.updateUserProfile(updateUserProfileData);
   }
 
 

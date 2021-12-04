@@ -65,7 +65,20 @@ export class UsersService {
     await this.userProfileRepo.save(profile)
 
     user.profile = profile
+    return await this.userRepo.save(user)
+  }
+
+  async updateUserProfile(updateUserProfileData): Promise<UserEntity> {
+    const { userId } = updateUserProfileData
+    const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
     console.log(user)
+    const profile: ProfileEntity = {
+      ...user.profile,
+      ...updateUserProfileData
+    }
+    await this.userProfileRepo.save(profile)
+
+    user.profile = profile
     return await this.userRepo.save(user)
   }
 
