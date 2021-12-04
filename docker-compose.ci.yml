@@ -7,9 +7,9 @@ services:
     environment:
       - WAIT_FOR_DB=true
       - DB_HOST=onijo-db
-      - DB_PORT=5445
+      - DB_PORT=5432
       - DB_HOST_TEST=onijo-test-db
-      - DB_PORT_TEST=5445
+      - DB_PORT_TEST=5432
       - RUN_MIGRATIONS_ON_START=true
     depends_on:
       - onijo-db
