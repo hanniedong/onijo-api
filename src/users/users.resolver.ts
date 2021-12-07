@@ -17,10 +17,11 @@ import { UpdateUserInput } from "./dto/input/update-user.input";
 import { UpdateUsernameInput } from "./dto/input/update-username.input";
 import { CreateUserProfileInput } from "./dto/input/create-userprofile.input";
 import { UpdateUserProfileInput } from "./dto/input/update-userprofile.input";
+import { TwilioService } from "src/client/twilio/twilio.service";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService, private readonly twilioService: TwilioService) { }
 
   @Query(() => UserEntity, { name: 'user', nullable: true })
   @UseGuards(GqlAuthGuard)
@@ -34,8 +35,11 @@ export class UsersResolver {
   // }
 
   @Mutation(() => UserEntity)
-  async createUser(@Args('createUserData') createUserData: CreateUserInput): Promise<UserInterface> {
-    return await this.usersService.createUser(createUserData);
+  async createUser(@Args('createUserData') createUserData: CreateUserInput) {
+    const { phoneNumber } = createUserData
+    const user = await this.usersService.createUser(createUserData);
+    if (user) await this.twilioService.sendVerificationCode(phoneNumber)
+    return user
   }
 
   @Mutation(() => UserEntity)

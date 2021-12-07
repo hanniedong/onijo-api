@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { getDatabaseConfig } from './config/database.config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { TwilioModule } from 'nestjs-twilio';
 
 @Module({
   controllers: [AppController],
@@ -24,6 +25,10 @@ import { GraphQLModule } from '@nestjs/graphql';
       context: ({ req }) => ({
         headers: req.headers,
       }),
+    }),
+    TwilioModule.forRoot({
+      accountSid: process.env.TWILIO_ACCOUNT_SID,
+      authToken: process.env.TWILIO_AUTH_TOKEN,
     }),
   ],
   providers: [AppService],

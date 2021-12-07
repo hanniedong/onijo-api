@@ -2,6 +2,7 @@ import { toUserDto } from "@mappers/user.mapper";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { TwilioService } from "src/client/twilio/twilio.service";
 import { UserInterface } from "src/interfaces/user.interface";
 import { ProfileEntity } from "src/user_profiles/entities/profile.entity";
 import { Repository } from 'typeorm';
@@ -21,13 +22,15 @@ export class UsersService {
     private readonly userRepo: Repository<UserEntity>,
     @InjectRepository(ProfileEntity)
     private readonly userProfileRepo: Repository<ProfileEntity>,
+    private readonly twilioService: TwilioService
   ) { }
 
-  async createUser(createUserData): Promise<UserEntity> {
+  async createUser(createUserData) {
     const user: UserEntity = {
       id: uuidv4(),
       ...createUserData
     }
+
     try {
       return await this.userRepo.save(user);
     } catch (e) {

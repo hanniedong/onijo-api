@@ -7,7 +7,7 @@ export const defaults = {
   database: process.env.DB_DATABASE || 'onijo_db',
   logging: process.env.DB_LOGGING || true,
   ssl: process.env.DB_USE_SSL === 'true' ? { rejectUnauthorized: false } : false,
-  synchronize: true,
+  synchronize: false,
   seeds: ['src/database/seeds/**/*.seed.ts'],
   factories: ['src/database/factories/**/*.factory.ts'],
   entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
