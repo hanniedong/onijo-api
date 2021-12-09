@@ -37,6 +37,12 @@ export class UpdateUserProfileInput {
   bio?: Nullable<string>;
 }
 
+export class VerifyUserPhoneNumberInput {
+  userId?: Nullable<string>;
+  phoneNumber?: Nullable<string>;
+  verificationCode?: Nullable<string>;
+}
+
 export abstract class IQuery {
   abstract users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 
@@ -53,6 +59,8 @@ export abstract class IMutation {
   abstract createUserProfile(createUserProfileInput?: Nullable<CreateUserProfileInput>): Nullable<User> | Promise<Nullable<User>>;
 
   abstract updateUserProfile(updateUserProfileInput?: Nullable<UpdateUserProfileInput>): Nullable<User> | Promise<Nullable<User>>;
+
+  abstract verifyUserPhoneNumber(verifyUserPhoneNumberInput?: Nullable<VerifyUserPhoneNumberInput>): Nullable<User> | Promise<Nullable<User>>;
 }
 
 export abstract class ISubscription {

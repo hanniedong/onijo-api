@@ -17,11 +17,12 @@ import { UpdateUserInput } from "./dto/input/update-user.input";
 import { UpdateUsernameInput } from "./dto/input/update-username.input";
 import { CreateUserProfileInput } from "./dto/input/create-userprofile.input";
 import { UpdateUserProfileInput } from "./dto/input/update-userprofile.input";
-import { TwilioService } from "src/client/twilio/twilio.service";
+import { SmsService } from "src/sms/sms.service";
+import { VerifyUserPhoneNumberInput } from "./dto/input/verify-user-phone-number.input";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService, private readonly twilioService: TwilioService) { }
+  constructor(private readonly usersService: UsersService, private readonly smsService: SmsService) { }
 
   @Query(() => UserEntity, { name: 'user', nullable: true })
   @UseGuards(GqlAuthGuard)
@@ -37,9 +38,16 @@ export class UsersResolver {
   @Mutation(() => UserEntity)
   async createUser(@Args('createUserData') createUserData: CreateUserInput) {
     const { phoneNumber } = createUserData
-    const user = await this.usersService.createUser(createUserData);
-    if (user) await this.twilioService.sendVerificationCode(phoneNumber)
+    const user = await this.usersService.createUser(createUserData) || await this.usersService.findUser({ phoneNumber })
+    await this.smsService.initiatePhoneNumberVerification(phoneNumber)
     return user
+  }
+
+  @Mutation(() => UserEntity)
+  async verifyUserPhoneNumber(@Args('verifyUserPhoneNumberData') verifyUserPhoneNumberData: VerifyUserPhoneNumberInput): Promise<UserEntity> {
+    const { verificationCode, phoneNumber } = verifyUserPhoneNumberData
+    const result = await this.smsService.confirmPhoneNumber(phoneNumber, verificationCode)
+    return result.valid && await this.usersService.updateUserPhoneNumberConfirmation(verifyUserPhoneNumberData);
   }
 
   @Mutation(() => UserEntity)

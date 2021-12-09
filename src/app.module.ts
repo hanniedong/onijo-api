@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { getDatabaseConfig } from './config/database.config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TwilioModule } from 'nestjs-twilio';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   controllers: [AppController],
@@ -16,6 +17,7 @@ import { TwilioModule } from 'nestjs-twilio';
     ConfigModule.forRoot({ load: [getDatabaseConfig] }),
     AuthModule,
     UsersModule,
+    SmsModule,
     TypeOrmModule.forRoot(getDatabaseConfig()),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
