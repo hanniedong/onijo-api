@@ -24,9 +24,8 @@ export class SmsService {
 
   async initiatePhoneNumberVerification(phoneNumber: string) {
     const serviceId = process.env.TWILIO_SERVICE_ID;
-
     try {
-      return await this.twilioClient.verify.services(serviceId).verifications.create({ to: phoneNumber, channel: 'sms' })
+      return await this.twilioClient.verify.services(serviceId).verifications.create({ to: '+15103661172', channel: 'sms' })
     } catch (e) {
       return e
     }

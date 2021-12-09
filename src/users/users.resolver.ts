@@ -39,7 +39,8 @@ export class UsersResolver {
   async createUser(@Args('createUserData') createUserData: CreateUserInput) {
     const { phoneNumber } = createUserData
     const user = await this.usersService.createUser(createUserData) || await this.usersService.findUser({ phoneNumber })
-    await this.smsService.initiatePhoneNumberVerification(phoneNumber)
+    const data = await this.smsService.initiatePhoneNumberVerification(phoneNumber)
+    console.log(data)
     return user
   }
 

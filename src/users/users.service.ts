@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDto } from "./dto/user.dto";
 import { UserEntity } from "./entitites/user.entity";
+import { FilesService } from "src/files/files.service";
 // import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUsersArgs } from "./dto/args/get-users.args";
 // import { CreateUserInput } from "./dto/input/create-user.input";
@@ -22,6 +23,7 @@ export class UsersService {
     private readonly userRepo: Repository<UserEntity>,
     @InjectRepository(ProfileEntity)
     private readonly userProfileRepo: Repository<ProfileEntity>,
+    private readonly filesService: FilesService
   ) { }
 
   async createUser(createUserData) {
@@ -96,6 +98,16 @@ export class UsersService {
 
   async findUser(options): Promise<UserEntity> {
     return await this.userRepo.findOne(options);
+  }
+
+  async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
+    const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
+    const user = await this.findUser(userId);
+    await this.userRepo.update(userId, {
+      ...user,
+      avatar
+    });
+    return avatar;
   }
 
   // public getUsers(getUsersArgs): UserEntity[] {
