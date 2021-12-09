@@ -39,8 +39,8 @@ export class UserEntity {
   @Column({ type: 'timestamptz', name: 'password_last_updated_at', nullable: true })
   passwordLastUpdatedAt: Date;
 
-  @Column({ type: 'timestamptz', name: 'last_verified_at', nullable: true })
-  lastVerifiedAt: Date;
+  @Column({ default: false })
+  isPhoneNumberConfirmed: boolean;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;

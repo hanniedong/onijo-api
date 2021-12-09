@@ -63,3 +63,12 @@ input updateUserProfileInput {
   bio: String
 }
 
+type Mutation {
+  verifyUserPhoneNumber(verifyUserPhoneNumberInput: verifyUserPhoneNumberInput): User
+}
+
+input verifyUserPhoneNumberInput {
+  userId: String
+  phoneNumber: String
+  verificationCode: String
+}

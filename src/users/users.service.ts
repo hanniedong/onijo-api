@@ -2,6 +2,7 @@ import { toUserDto } from "@mappers/user.mapper";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { SmsService } from "src/sms/sms.service";
 import { UserInterface } from "src/interfaces/user.interface";
 import { ProfileEntity } from "src/user_profiles/entities/profile.entity";
 import { Repository } from 'typeorm';
@@ -23,11 +24,12 @@ export class UsersService {
     private readonly userProfileRepo: Repository<ProfileEntity>,
   ) { }
 
-  async createUser(createUserData): Promise<UserEntity> {
+  async createUser(createUserData) {
     const user: UserEntity = {
       id: uuidv4(),
       ...createUserData
     }
+
     try {
       return await this.userRepo.save(user);
     } catch (e) {
@@ -41,6 +43,16 @@ export class UsersService {
       const hashedPassword = await bcrypt.hash(password, 10);
       await this.userRepo.update(id, { email, password: hashedPassword });
       return await this.userRepo.findOne(id)
+    } catch (e) {
+      console.log(`Error updating user. Error: ${e}`)
+    }
+  }
+
+  async updateUserPhoneNumberConfirmation(verifyUserPhoneNumberData): Promise<UserEntity> {
+    const { userId } = verifyUserPhoneNumberData
+    try {
+      await this.userRepo.update(userId, { isPhoneNumberConfirmed: true });
+      return await this.userRepo.findOne(userId)
     } catch (e) {
       console.log(`Error updating user. Error: ${e}`)
     }
