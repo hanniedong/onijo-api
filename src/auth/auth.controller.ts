@@ -5,6 +5,7 @@ import { LoginInterface } from "src/interfaces/login.interface";
 
 import { AuthService } from "./auth.service";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
+import RequestWithUser from "./interface/requestWithUser.interface";
 
 @Controller('auth')
 export class AuthController {
@@ -12,7 +13,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: Request): Promise<LoginInterface> {
+  async login(@Req() req: RequestWithUser): Promise<LoginInterface> {
     return await this.authService.login(req.user as UserEntity);
   }
 }

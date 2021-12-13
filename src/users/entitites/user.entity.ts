@@ -11,6 +11,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { ProfileEntity } from 'src/user_profiles/entities/profile.entity';
+import PublicFile from 'src/files/entities/publicFile.entity';
 
 @Entity('users')
 @ObjectType()
@@ -58,4 +59,14 @@ export class UserEntity {
   @OneToOne(() => ProfileEntity)
   @JoinColumn()
   profile: ProfileEntity;
+
+  @JoinColumn()
+  @OneToOne(
+    () => PublicFile,
+    {
+      eager: true,
+      nullable: true
+    }
+  )
+  public avatar?: PublicFile;
 }

@@ -3,7 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SmsService } from 'src/sms/sms.service';
 
 @Module({
-  providers: [ConfigService, SmsService],
-  exports: [],
+  imports: [ConfigModule],
+  providers: [SmsService],
+  exports: [SmsService],
 })
 export class SmsModule { }
