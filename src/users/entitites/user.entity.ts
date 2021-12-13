@@ -43,12 +43,6 @@ export class UserEntity {
   @Column({ default: false })
   isPhoneNumberConfirmed: boolean;
 
-  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
-  updatedAt: Date;
-
   @BeforeInsert()
   async hashPassword() {
     console.log("hashed")
@@ -57,10 +51,10 @@ export class UserEntity {
 
   @Field()
   @OneToOne(() => ProfileEntity)
-  @JoinColumn()
+  @JoinColumn({ name: 'profile_id' })
   profile: ProfileEntity;
 
-  @JoinColumn()
+  @JoinColumn({ name: 'avatar_id' })
   @OneToOne(
     () => PublicFile,
     {
@@ -69,4 +63,10 @@ export class UserEntity {
     }
   )
   public avatar?: PublicFile;
+
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
+  updatedAt: Date;
 }

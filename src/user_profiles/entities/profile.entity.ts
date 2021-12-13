@@ -22,10 +22,6 @@ export class ProfileEntity {
 
   @Field()
   @Column({ type: 'varchar', nullable: true })
-  avatar: string;
-
-  @Field()
-  @Column({ type: 'varchar', nullable: true })
   job: string;
 
   @Field()
