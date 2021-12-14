@@ -44,9 +44,16 @@ export class VerifyUserPhoneNumberInput {
 }
 
 export abstract class IQuery {
+  abstract teams(): Nullable<Nullable<Team>[]> | Promise<Nullable<Nullable<Team>[]>>;
+
   abstract users(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 
   abstract user(id: string): Nullable<User> | Promise<Nullable<User>>;
+}
+
+export class Team {
+  id?: Nullable<string>;
+  displayName?: Nullable<string>;
 }
 
 export abstract class IMutation {

@@ -1,13 +1,17 @@
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
+@ObjectType()
 export class File {
   @PrimaryGeneratedColumn()
   public id: number;
 
+  @Field()
   @Column()
   public url: string;
 
+  @Field()
   @Column()
   public key: string;
 

@@ -4,11 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { SmsService } from "src/sms/sms.service";
 import { UserInterface } from "src/interfaces/user.interface";
-import { ProfileEntity } from "src/user_profiles/entities/profile.entity";
+import { ProfileEntity } from "src/database/entities/profile.entity";
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDto } from "./dto/user.dto";
-import { UserEntity } from "./entitites/user.entity";
+import { UserEntity } from "../database/entities/user.entity";
 import { FilesService } from "src/files/files.service";
 // import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUsersArgs } from "./dto/args/get-users.args";
@@ -100,7 +100,7 @@ export class UsersService {
     return await this.userRepo.findOne(options);
   }
 
-  async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
+  async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
     const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
     const user = await this.findUser(userId);
     await this.userRepo.update(userId, {

@@ -29,6 +29,7 @@ export class OrganizationEntity {
   league: string;
 
   @JoinColumn({ name: 'avatar_id' })
+  @Field()
   @OneToOne(
     () => File,
     {

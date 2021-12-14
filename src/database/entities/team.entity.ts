@@ -23,6 +23,7 @@ export class TeamEntity {
   displayName: string;
 
   @JoinColumn({ name: 'organization_id' })
+  @Field()
   @ManyToOne(() => OrganizationEntity, organization => organization.teams)
   organization: OrganizationEntity;
 
