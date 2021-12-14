@@ -3,30 +3,24 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  OneToOne,
   UpdateDateColumn,
   JoinColumn,
   ManyToOne
 } from 'typeorm';
 import { Field, ObjectType } from "@nestjs/graphql";
-import PublicFile from 'src/files/entities/publicFile.entity';
-import { OrganizationEntity } from 'src/organizations/entities/organization.entity';
+import { OrganizationEntity } from './organization.entity';
 
 @Entity('teams')
 @ObjectType()
 export class TeamEntity {
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   @Field()
-  id: string;
+  id: number;
 
   @Column({ type: 'varchar', name: 'display_name' })
   @Field()
   displayName: string;
-
-  @Column({ type: 'varchar' })
-  @Field()
-  league: string;
 
   @JoinColumn({ name: 'organization_id' })
   @ManyToOne(() => OrganizationEntity, organization => organization.teams)
@@ -37,5 +31,4 @@ export class TeamEntity {
 
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
-
 }

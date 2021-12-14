@@ -6,20 +6,25 @@ import {
   OneToOne,
   BeforeInsert,
   UpdateDateColumn,
-  JoinColumn
+  JoinColumn,
+  Generated
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { ProfileEntity } from 'src/user_profiles/entities/profile.entity';
-import PublicFile from 'src/files/entities/publicFile.entity';
+import { Field, ObjectType } from "@nestjs/graphql";
+import { ProfileEntity } from './profile.entity';
+import { File } from './file.entity';
 
 @Entity('users')
 @ObjectType()
 export class UserEntity {
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   @Field()
-  id: string;
+  id: number;
+
+  @Column()
+  @Generated("uuid")
+  uuid: string;
 
   @Column({ type: 'varchar', nullable: true })
   @Field()
@@ -56,13 +61,13 @@ export class UserEntity {
 
   @JoinColumn({ name: 'avatar_id' })
   @OneToOne(
-    () => PublicFile,
+    () => File,
     {
       eager: true,
       nullable: true
     }
   )
-  public avatar?: PublicFile;
+  public avatar?: File;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;

@@ -1,6 +1,6 @@
 export interface UserInterface {
   email: string;
   username: string;
-  id: string;
+  id: number;
   phoneNumber: string;
 }

@@ -9,16 +9,16 @@ import {
   OneToMany
 } from 'typeorm';
 import { Field, ObjectType } from "@nestjs/graphql";
-import PublicFile from 'src/files/entities/publicFile.entity';
-import { TeamEntity } from 'src/teams/entities/team.entity';
+import { File } from './file.entity';
+import { TeamEntity } from './team.entity';
 
 @Entity('organizations')
 @ObjectType()
 export class OrganizationEntity {
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   @Field()
-  id: string;
+  id: number;
 
   @Column({ type: 'varchar', name: 'display_name' })
   @Field()
@@ -30,13 +30,13 @@ export class OrganizationEntity {
 
   @JoinColumn({ name: 'avatar_id' })
   @OneToOne(
-    () => PublicFile,
+    () => File,
     {
       eager: true,
       nullable: true
     }
   )
-  public avatar?: PublicFile;
+  public avatar?: File;
 
   @OneToMany(() => TeamEntity, team => team.organization)
   teams: TeamEntity[];
@@ -46,5 +46,4 @@ export class OrganizationEntity {
 
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
-
 }

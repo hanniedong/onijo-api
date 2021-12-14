@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-class PublicFile {
+export class File {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -17,5 +17,3 @@ class PublicFile {
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
 }
-
-export default PublicFile;

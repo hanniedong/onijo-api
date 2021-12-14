@@ -10,7 +10,7 @@ export const defaults = {
   synchronize: true,
   seeds: ['src/database/seeds/**/*.seed.ts'],
   factories: ['src/database/factories/**/*.factory.ts'],
-  entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
+  entities: ['src/database/entities/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migration/**/*{.ts,.js}'],
   cli: {
     "migrationsDir": "src/migration",
