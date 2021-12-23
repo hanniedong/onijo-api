@@ -12,10 +12,6 @@ import { GetUserArgs } from "./dto/args/get-user.args";
 
 import { UsersService } from "./users.service";
 import { UserDto } from "./dto/user.dto";
-import { UpdateUserInput } from "./dto/input/update-user.input";
-import { UpdateUsernameInput } from "./dto/input/update-username.input";
-import { CreateUserProfileInput } from "./dto/input/create-userprofile.input";
-import { UpdateUserProfileInput } from "./dto/input/update-userprofile.input";
 import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
 import { UpdateUserTeamMetadataInput } from "./dto/input/update-user-team-metadata.input";
 
@@ -33,22 +29,6 @@ export class UsersResolver {
   // getUsers(@Args() getUsersArgs: GetUsersArgs): User[] {
   //   return this.usersService.getUsers(getUsersArgs);
   // }
-
-  @Mutation(() => UserEntity)
-  async updateUsername(@Args('updateUsernameData') updateUsernameData: UpdateUsernameInput): Promise<UserEntity> {
-    console.log("HIT")
-    return await this.usersService.updateUsername(updateUsernameData);
-  }
-
-  @Mutation(() => UserEntity)
-  async createUserProfile(@Args('createUserProfileData') createUserProfileData: CreateUserProfileInput): Promise<UserEntity> {
-    return await this.usersService.createUserProfile(createUserProfileData);
-  }
-
-  @Mutation(() => UserEntity)
-  async updateUserProfile(@Args('updateUserProfileData') updateUserProfileData: UpdateUserProfileInput): Promise<UserEntity> {
-    return await this.usersService.updateUserProfile(updateUserProfileData);
-  }
 
   @Mutation(() => UserTeamMetadata)
   async updateUserTeamMetadata(@Args('updateUserTeamMetadata') updateUserTeamMetadata: UpdateUserTeamMetadataInput): Promise<UserEntity> {

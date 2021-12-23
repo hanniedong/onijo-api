@@ -52,30 +52,7 @@ export class UsersService {
     }
   }
 
-  async updateUsername(updateUsernameData): Promise<UserEntity> {
-    const { id, username } = updateUsernameData
-    try {
-      await this.userRepo.update(id, {});
-      return await this.userRepo.findOne(id)
-    } catch (e) {
-      console.log(`Error updating user. Error: ${e}`)
-    }
-  }
-
-  async createUserProfile(createUserProfileData): Promise<UserEntity> {
-    const { userId } = createUserProfileData
-    const user = await this.userRepo.findOne(userId)
-    const profile: ProfileEntity = {
-      ...createUserProfileData
-    }
-    await this.userProfileRepo.save(profile)
-
-    user.profile = profile
-    return await this.userRepo.save(user)
-  }
-
-  async updateUserProfile(updateUserProfileData): Promise<UserEntity> {
-    const { userId } = updateUserProfileData
+  async updateUserProfile(updateUserProfileData, userId): Promise<UserEntity> {
     const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
     const profile: ProfileEntity = {
       ...user.profile,

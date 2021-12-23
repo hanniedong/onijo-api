@@ -1,11 +1,12 @@
 import { UsersService } from './users.service';
-import { Body, Controller, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 
 import { FileInterceptor } from '@nestjs/platform-express';
 import RequestWithUser from 'src/auth/interface/requestWithUser.interface';
 import { Multer } from 'multer';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/user.create.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -24,6 +25,16 @@ export class UsersController {
   async createUser(@Body() createUserDto: CreateUserDto,) {
     try {
       return await this.usersService.createUser(createUserDto);
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  @Patch()
+  @UseGuards(JwtAuthGuard)
+  async updateUserProfile(@Body() updateUserDto: UpdateUserDto, @Req() request: RequestWithUser) {
+    try {
+      return await this.usersService.updateUserProfile(updateUserDto, request.user.id);
     } catch (e) {
       console.error(e)
     }
