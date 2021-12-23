@@ -8,7 +8,8 @@ import {
   UpdateDateColumn,
   JoinColumn,
   Generated,
-  OneToMany
+  OneToMany,
+  BeforeUpdate
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Field, ObjectType } from "@nestjs/graphql";
@@ -52,9 +53,10 @@ export class UserEntity {
   isPhoneNumberConfirmed: boolean;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     console.log("hashed")
-    this.password = await bcrypt.hash(this.password, 10);
+    return this.password = await bcrypt.hash(this.password, 10);
   }
 
   @Field()

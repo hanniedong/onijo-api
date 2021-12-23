@@ -1,12 +1,12 @@
 import { BadRequestException, Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { SmsService } from './sms.service';
-import { AuthGuard } from '@nestjs/passport';
 import { InitiatePhoneNumberVerificationDto } from './dto/initate-phone-number-verification.dto';
 import RequestWithUser from 'src/auth/interface/requestWithUser.interface';
 import { VerificationCodeDto } from './dto/verification-code.dto';
 import { UsersService } from '@users/users.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 @Controller('sms')
 export class SmsController {
   constructor(private readonly smsService: SmsService, private readonly usersService: UsersService) { }
@@ -34,7 +34,6 @@ export class SmsController {
       const { phoneNumber, verificationCode } = verificationCodeDto
       const phoneNumberConfirmation = await this.smsService.confirmPhoneNumber(phoneNumber, verificationCode);
       if (phoneNumberConfirmation?.valid) {
-        console.log(userId)
         await this.usersService.updateUserPhoneNumberConfirmation(userId)
       }
     } catch (e) {

@@ -34,24 +34,12 @@ export class UsersService {
       uuid: uuidv4(),
       ...createUserData
     }
-
+    const hashedPassword = await bcrypt.hash(createUserData.password, 10);
+    user.password = hashedPassword
     try {
       return await this.userRepo.save(user);
     } catch (e) {
       console.log(`Error creating user. Error: ${e}`)
-    }
-  }
-
-  async updateUser(updateUserData): Promise<UserEntity> {
-    console.log("HITTTTT")
-    const { id, email, password } = updateUserData
-    console.log(updateUserData)
-    try {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await this.userRepo.update(id, { email, password: hashedPassword });
-      return await this.userRepo.findOne(id)
-    } catch (e) {
-      console.log(`Error updating user. Error: ${e}`)
     }
   }
 
