@@ -2,6 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@users/users.service';
+import { InitiatePhoneNumberVerificationDto } from './dto/initate-phone-number-verification.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SmsService {
@@ -22,7 +26,7 @@ export class SmsService {
     }
   }
 
-  async initiatePhoneNumberVerification(phoneNumber: string) {
+  async initiatePhoneNumberVerification(phoneNumber: InitiatePhoneNumberVerificationDto) {
     const serviceId = process.env.TWILIO_SERVICE_ID;
     try {
       return await this.twilioClient.verify.services(serviceId).verifications.create({ to: '+15103661172', channel: 'sms' })
@@ -31,9 +35,9 @@ export class SmsService {
     }
   }
 
-  async confirmPhoneNumber(phoneNumber: string, verificationCode: string) {
+  async confirmPhoneNumber(phoneNumber: string, verificationCode: string): Promise<{ valid: boolean }> {
     const serviceId = process.env.TWILIO_SERVICE_ID;
-    console.log(serviceId)
+
     const result = await this.twilioClient.verify.services(serviceId)
       .verificationChecks
       .create({ to: phoneNumber, code: verificationCode })

@@ -55,8 +55,7 @@ export class UsersService {
     }
   }
 
-  async updateUserPhoneNumberConfirmation(verifyUserPhoneNumberData): Promise<UserEntity> {
-    const { userId } = verifyUserPhoneNumberData
+  async updateUserPhoneNumberConfirmation(userId): Promise<UserEntity> {
     try {
       await this.userRepo.update(userId, { isPhoneNumberConfirmed: true });
       return await this.userRepo.findOne(userId)
@@ -68,7 +67,7 @@ export class UsersService {
   async updateUsername(updateUsernameData): Promise<UserEntity> {
     const { id, username } = updateUsernameData
     try {
-      await this.userRepo.update(id, { username });
+      await this.userRepo.update(id, {});
       return await this.userRepo.findOne(id)
     } catch (e) {
       console.log(`Error updating user. Error: ${e}`)

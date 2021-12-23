@@ -17,14 +17,13 @@ import { UpdateUserInput } from "./dto/input/update-user.input";
 import { UpdateUsernameInput } from "./dto/input/update-username.input";
 import { CreateUserProfileInput } from "./dto/input/create-userprofile.input";
 import { UpdateUserProfileInput } from "./dto/input/update-userprofile.input";
-import { SmsService } from "src/sms/sms.service";
 import { VerifyUserPhoneNumberInput } from "./dto/input/verify-user-phone-number.input";
 import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
 import { UpdateUserTeamMetadataInput } from "./dto/input/update-user-team-metadata.input";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService, private readonly smsService: SmsService) { }
+  constructor(private readonly usersService: UsersService) { }
 
   @Query(() => UserEntity, { name: 'user', nullable: true })
   @UseGuards(GqlAuthGuard)
@@ -36,22 +35,6 @@ export class UsersResolver {
   // getUsers(@Args() getUsersArgs: GetUsersArgs): User[] {
   //   return this.usersService.getUsers(getUsersArgs);
   // }
-
-  @Mutation(() => UserEntity)
-  async createUser(@Args('createUserData') createUserData: CreateUserInput) {
-    const { phoneNumber } = createUserData
-    const user = await this.usersService.createUser(createUserData) || await this.usersService.findUser({ phoneNumber })
-    const data = await this.smsService.initiatePhoneNumberVerification(phoneNumber)
-    console.log(data)
-    return user
-  }
-
-  @Mutation(() => UserEntity)
-  async verifyUserPhoneNumber(@Args('verifyUserPhoneNumberData') verifyUserPhoneNumberData: VerifyUserPhoneNumberInput): Promise<UserEntity> {
-    const { verificationCode, phoneNumber } = verifyUserPhoneNumberData
-    const result = await this.smsService.confirmPhoneNumber(phoneNumber, verificationCode)
-    return result.valid && await this.usersService.updateUserPhoneNumberConfirmation(verifyUserPhoneNumberData);
-  }
 
   @Mutation(() => UserEntity)
   async updateUser(@Args('updateUserData') updateUserData: UpdateUserInput): Promise<UserEntity> {
