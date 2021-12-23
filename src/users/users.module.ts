@@ -8,9 +8,10 @@ import { SmsModule } from 'src/sms/sms.module';
 import { FilesModule } from 'src/files/files.module';
 import { UsersController } from './users.controller';
 import { File } from 'src/database/entities/file.entity';
+import { UserTeamMetadata } from 'src/database/entities/user-team-metadata.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, ProfileEntity]), SmsModule, FilesModule],
+  imports: [TypeOrmModule.forFeature([UserEntity, ProfileEntity, UserTeamMetadata]), SmsModule, FilesModule],
   controllers: [UsersController],
   providers: [UsersService, UsersResolver],
   exports: [UsersService],

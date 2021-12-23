@@ -7,12 +7,15 @@ import {
   BeforeInsert,
   UpdateDateColumn,
   JoinColumn,
-  Generated
+  Generated,
+  OneToMany
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Field, ObjectType } from "@nestjs/graphql";
 import { ProfileEntity } from './profile.entity';
 import { File } from './file.entity';
+import { UserTeamMetadata } from './user-team-metadata.entity';
+import { isEmail } from 'class-validator';
 
 @Entity('users')
 @ObjectType()
@@ -58,6 +61,11 @@ export class UserEntity {
   @OneToOne(() => ProfileEntity)
   @JoinColumn({ name: 'profile_id' })
   profile: ProfileEntity;
+
+  @Field()
+  @OneToMany(type => UserTeamMetadata, userTeamMetadata => userTeamMetadata.id)
+  @JoinColumn({ name: 'user_team_metadata_id' })
+  userTeamMetadata: UserTeamMetadata;
 
   @JoinColumn({ name: 'avatar_id' })
   @OneToOne(

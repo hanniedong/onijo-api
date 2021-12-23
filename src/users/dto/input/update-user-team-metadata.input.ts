@@ -2,19 +2,16 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty } from 'class-validator';
 
 @InputType()
-export class CreateUserProfileInput {
-  @Field()
-  @IsNotEmpty()
-  firstName: string;
-
-  @Field()
-  @IsNotEmpty()
-  lastName: string;
-
+export class UpdateUserTeamMetadataInput {
   @Field()
   @IsNotEmpty()
   userId: number;
 
   @Field()
-  birthday: Date;
+  @IsNotEmpty()
+  teamId: number;
+
+  @Field()
+  @IsNotEmpty()
+  yearJoined: number;
 }

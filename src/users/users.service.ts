@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UserDto } from "./dto/user.dto";
 import { UserEntity } from "../database/entities/user.entity";
 import { FilesService } from "src/files/files.service";
+import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
 // import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUsersArgs } from "./dto/args/get-users.args";
 // import { CreateUserInput } from "./dto/input/create-user.input";
@@ -23,12 +24,14 @@ export class UsersService {
     private readonly userRepo: Repository<UserEntity>,
     @InjectRepository(ProfileEntity)
     private readonly userProfileRepo: Repository<ProfileEntity>,
+    @InjectRepository(UserTeamMetadata)
+    private readonly userTeamMetadataRepo: Repository<UserTeamMetadata>,
     private readonly filesService: FilesService
   ) { }
 
   async createUser(createUserData) {
     const user: UserEntity = {
-      id: uuidv4(),
+      uuid: uuidv4(),
       ...createUserData
     }
 
@@ -40,7 +43,9 @@ export class UsersService {
   }
 
   async updateUser(updateUserData): Promise<UserEntity> {
+    console.log("HITTTTT")
     const { id, email, password } = updateUserData
+    console.log(updateUserData)
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
       await this.userRepo.update(id, { email, password: hashedPassword });
@@ -85,7 +90,6 @@ export class UsersService {
   async updateUserProfile(updateUserProfileData): Promise<UserEntity> {
     const { userId } = updateUserProfileData
     const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
-    console.log(user)
     const profile: ProfileEntity = {
       ...user.profile,
       ...updateUserProfileData
@@ -95,6 +99,22 @@ export class UsersService {
     user.profile = profile
     return await this.userRepo.save(user)
   }
+
+  async updateUserTeamMetadata(updateUserTeamMetadata): Promise<UserEntity> {
+    const { userId } = updateUserTeamMetadata
+    const user = await this.userRepo.findOne(userId, { relations: ['userTeamMetadata'] })
+    console.log(user)
+    const userTeamMetadata: UserTeamMetadata = {
+      ...user.userTeamMetadata,
+      ...updateUserTeamMetadata
+    }
+
+    await this.userTeamMetadataRepo.save(userTeamMetadata)
+
+    user.userTeamMetadata = userTeamMetadata
+    return await this.userRepo.save(user)
+  }
+
 
   async findUser(options): Promise<UserEntity> {
     return await this.userRepo.findOne(options);

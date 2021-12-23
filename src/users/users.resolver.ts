@@ -19,6 +19,8 @@ import { CreateUserProfileInput } from "./dto/input/create-userprofile.input";
 import { UpdateUserProfileInput } from "./dto/input/update-userprofile.input";
 import { SmsService } from "src/sms/sms.service";
 import { VerifyUserPhoneNumberInput } from "./dto/input/verify-user-phone-number.input";
+import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
+import { UpdateUserTeamMetadataInput } from "./dto/input/update-user-team-metadata.input";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -71,6 +73,12 @@ export class UsersResolver {
   async updateUserProfile(@Args('updateUserProfileData') updateUserProfileData: UpdateUserProfileInput): Promise<UserEntity> {
     return await this.usersService.updateUserProfile(updateUserProfileData);
   }
+
+  @Mutation(() => UserTeamMetadata)
+  async updateUserTeamMetadata(@Args('updateUserTeamMetadata') updateUserTeamMetadata: UpdateUserTeamMetadataInput): Promise<UserEntity> {
+    return await this.usersService.updateUserTeamMetadata(updateUserTeamMetadata);
+  }
+
 
 
   // @Mutation(() => User)

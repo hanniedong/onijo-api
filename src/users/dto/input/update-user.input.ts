@@ -6,7 +6,7 @@ export class UpdateUserInput {
 
   @Field()
   @IsNotEmpty()
-  id: string;
+  id: number;
 
   @Field()
   @IsNotEmpty()
