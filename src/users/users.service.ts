@@ -1,13 +1,10 @@
-import { toUserDto } from "@mappers/user.mapper";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { SmsService } from "src/sms/sms.service";
-import { UserInterface } from "src/interfaces/user.interface";
-import { ProfileEntity } from "src/database/entities/profile.entity";
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { UserDto } from "./dto/user.dto";
+
+import { ProfileEntity } from "src/database/entities/profile.entity";
 import { UserEntity } from "../database/entities/user.entity";
 import { FilesService } from "src/files/files.service";
 import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
@@ -44,30 +41,13 @@ export class UsersService {
   }
 
   async updateUserPhoneNumberConfirmation(userId): Promise<UserEntity> {
-    try {
-      await this.userRepo.update(userId, { isPhoneNumberConfirmed: true });
-      return await this.userRepo.findOne(userId)
-    } catch (e) {
-      console.log(`Error updating user. Error: ${e}`)
-    }
+    await this.userRepo.update(userId, { isPhoneNumberConfirmed: true });
+    return await this.userRepo.findOne(userId)
   }
 
-  async updateUserProfile(updateUserProfileData, userId): Promise<UserEntity> {
-    const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
-    const profile: ProfileEntity = {
-      ...user.profile,
-      ...updateUserProfileData
-    }
-    await this.userProfileRepo.save(profile)
-
-    user.profile = profile
-    return await this.userRepo.save(user)
-  }
-
-  async updateUserTeamMetadata(updateUserTeamMetadata): Promise<UserEntity> {
-    const { userId } = updateUserTeamMetadata
+  async updateUserTeamMetadata(updateUserTeamMetadata, userId): Promise<UserEntity> {
     const user = await this.userRepo.findOne(userId, { relations: ['userTeamMetadata'] })
-    console.log(user)
+
     const userTeamMetadata: UserTeamMetadata = {
       ...user.userTeamMetadata,
       ...updateUserTeamMetadata

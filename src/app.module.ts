@@ -12,6 +12,7 @@ import { TwilioModule } from 'nestjs-twilio';
 import { SmsModule } from './sms/sms.module';
 import { TeamsModule } from './teams/teams.module';
 import { FilesModule } from './files/files.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   controllers: [AppController],
@@ -22,6 +23,7 @@ import { FilesModule } from './files/files.module';
     SmsModule,
     FilesModule,
     TeamsModule,
+    ProfilesModule,
     TypeOrmModule.forRoot(getDatabaseConfig()),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,

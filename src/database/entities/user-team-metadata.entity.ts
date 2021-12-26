@@ -24,6 +24,10 @@ export class UserTeamMetadata {
   @Field()
   yearJoined: number;
 
+  @Column({ type: 'integer', nullable: true, name: 'year_ended' })
+  @Field()
+  yearEnded: number;
+
   @ManyToOne(type => UserEntity, user => user.id)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;

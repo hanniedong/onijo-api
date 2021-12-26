@@ -38,11 +38,11 @@ export class UserEntity {
   @Field()
   password: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: true, unique: true })
   @Field()
   email: string;
 
-  @Column({ type: 'varchar', nullable: false, name: 'phone_number', unique: true })
+  @Column({ type: 'varchar', nullable: true, name: 'phone_number' })
   @Field()
   phoneNumber: string;
 
@@ -51,6 +51,10 @@ export class UserEntity {
 
   @Column({ default: false })
   isPhoneNumberConfirmed: boolean;
+
+  @Column({ type: 'varchar', nullable: true, name: 'team_status' })
+  @Field()
+  teamStatus: string;
 
   @BeforeInsert()
   @BeforeUpdate()

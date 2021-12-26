@@ -13,7 +13,6 @@ import { GetUserArgs } from "./dto/args/get-user.args";
 import { UsersService } from "./users.service";
 import { UserDto } from "./dto/user.dto";
 import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
-import { UpdateUserTeamMetadataInput } from "./dto/input/update-user-team-metadata.input";
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -29,13 +28,6 @@ export class UsersResolver {
   // getUsers(@Args() getUsersArgs: GetUsersArgs): User[] {
   //   return this.usersService.getUsers(getUsersArgs);
   // }
-
-  @Mutation(() => UserTeamMetadata)
-  async updateUserTeamMetadata(@Args('updateUserTeamMetadata') updateUserTeamMetadata: UpdateUserTeamMetadataInput): Promise<UserEntity> {
-    return await this.usersService.updateUserTeamMetadata(updateUserTeamMetadata);
-  }
-
-
 
   // @Mutation(() => User)
   // deleteUser(@Args('deleteUserData') deleteUserData: DeleteUserInput): User {
