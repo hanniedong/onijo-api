@@ -5,10 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
-  ManyToOne
+  ManyToOne,
+  OneToMany
 } from 'typeorm';
 import { Field, ObjectType } from "@nestjs/graphql";
 import { OrganizationEntity } from './organization.entity';
+import { UserTeamMetadata } from './user-team-metadata.entity';
 
 @Entity('teams')
 @ObjectType()
@@ -21,6 +23,9 @@ export class TeamEntity {
   @Column({ type: 'varchar', name: 'display_name' })
   @Field()
   displayName: string;
+
+  @OneToMany(type => UserTeamMetadata, userTeamMetadata => userTeamMetadata.id)
+  userTeamMetadata: UserTeamMetadata;
 
   @JoinColumn({ name: 'organization_id' })
   @Field()

@@ -31,11 +31,13 @@ export class UsersController {
   }
 
   @Patch('teams')
-  async updateUserTeamMetadata(@Body(new ParseArrayPipe({ items: UpdateUserTeamMetadataDto }))
-  updateUserTeamMetadataDtos: UpdateUserTeamMetadataDto[], @Req() request: RequestWithUser,) {
+  @UseGuards(JwtAuthGuard)
+  async updateUserTeamMetadata(@Body()
+  UpdateUserTeamMetadataDto: UpdateUserTeamMetadataDto, @Req() request: RequestWithUser,) {
     try {
-      Promise.all(updateUserTeamMetadataDtos.map(async (updateUserTeamMetadataDto) => {
-        return await this.usersService.updateUserTeamMetadata(updateUserTeamMetadataDto, request.user.id);
+      Promise.all(UpdateUserTeamMetadataDto?.teams.map(async (updateUserTeamMetadataDto) => {
+        console.log("HOIT")
+        return await this.usersService.upsertUserTeamMetadata(updateUserTeamMetadataDto, request.user.id);
       }))
     } catch (e) {
       console.error(e)

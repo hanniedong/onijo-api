@@ -30,9 +30,6 @@ export class UserEntity {
   @Generated("uuid")
   uuid: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  @Field()
-  username: string;
 
   @Column({ type: 'varchar', nullable: true, })
   @Field()
@@ -49,12 +46,8 @@ export class UserEntity {
   @Column({ type: 'timestamptz', name: 'password_last_updated_at', nullable: true })
   passwordLastUpdatedAt: Date;
 
-  @Column({ default: false })
+  @Column({ default: false, name: 'is_phone_number_confirmed' })
   isPhoneNumberConfirmed: boolean;
-
-  @Column({ type: 'varchar', nullable: true, name: 'team_status' })
-  @Field()
-  teamStatus: string;
 
   @BeforeInsert()
   @BeforeUpdate()
@@ -70,7 +63,6 @@ export class UserEntity {
 
   @Field()
   @OneToMany(type => UserTeamMetadata, userTeamMetadata => userTeamMetadata.id)
-  @JoinColumn({ name: 'user_team_metadata_id' })
   userTeamMetadata: UserTeamMetadata;
 
   @JoinColumn({ name: 'avatar_id' })

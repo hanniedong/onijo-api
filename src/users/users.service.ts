@@ -8,6 +8,7 @@ import { ProfileEntity } from "src/database/entities/profile.entity";
 import { UserEntity } from "../database/entities/user.entity";
 import { FilesService } from "src/files/files.service";
 import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
+import { TeamEntity } from "src/database/entities/team.entity";
 // import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUsersArgs } from "./dto/args/get-users.args";
 // import { CreateUserInput } from "./dto/input/create-user.input";
@@ -19,10 +20,10 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(ProfileEntity)
-    private readonly userProfileRepo: Repository<ProfileEntity>,
     @InjectRepository(UserTeamMetadata)
     private readonly userTeamMetadataRepo: Repository<UserTeamMetadata>,
+    @InjectRepository(TeamEntity)
+    private readonly teamRepo: Repository<TeamEntity>,
     private readonly filesService: FilesService
   ) { }
 
@@ -45,18 +46,15 @@ export class UsersService {
     return await this.userRepo.findOne(userId)
   }
 
-  async updateUserTeamMetadata(updateUserTeamMetadata, userId): Promise<UserEntity> {
-    const user = await this.userRepo.findOne(userId, { relations: ['userTeamMetadata'] })
-
+  async upsertUserTeamMetadata(updateUserTeamMetadata, userId): Promise<UserTeamMetadata> {
+    const user = await this.findUser(userId)
+    const team = await this.teamRepo.findOne(updateUserTeamMetadata.teamId)
     const userTeamMetadata: UserTeamMetadata = {
-      ...user.userTeamMetadata,
       ...updateUserTeamMetadata
     }
-
-    await this.userTeamMetadataRepo.save(userTeamMetadata)
-
-    user.userTeamMetadata = userTeamMetadata
-    return await this.userRepo.save(user)
+    userTeamMetadata.user = user
+    userTeamMetadata.team = team
+    return await this.userTeamMetadataRepo.save(userTeamMetadata)
   }
 
 

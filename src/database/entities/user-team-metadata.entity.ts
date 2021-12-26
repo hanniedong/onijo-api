@@ -3,7 +3,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  OneToOne,
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
@@ -29,11 +28,11 @@ export class UserTeamMetadata {
   yearEnded: number;
 
   @ManyToOne(type => UserEntity, user => user.id)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 
-  @ManyToOne(() => TeamEntity)
-  @JoinColumn({ name: 'team_id' })
+  @ManyToOne(type => TeamEntity, team => team.id)
+  @JoinColumn({ name: 'team_id', referencedColumnName: 'id' })
   team: TeamEntity;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })

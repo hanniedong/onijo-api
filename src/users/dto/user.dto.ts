@@ -5,9 +5,6 @@ export class UserDto {
   id: number;
 
   @IsNotEmpty()
-  username: string;
-
-  @IsNotEmpty()
   @IsEmail()
   email: string;
 

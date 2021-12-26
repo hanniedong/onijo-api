@@ -39,6 +39,10 @@ export class ProfileEntity {
   @Column({ type: 'varchar', nullable: true })
   bio: string;
 
+  @Column({ type: 'varchar', nullable: true, name: 'team_status' })
+  @Field()
+  teamStatus: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 
