@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -27,18 +27,20 @@ export class UsersService {
     private readonly filesService: FilesService
   ) { }
 
-  async createUser(createUserData) {
-    const user: UserEntity = {
-      uuid: uuidv4(),
-      ...createUserData
-    }
-    const hashedPassword = await bcrypt.hash(createUserData.password, 10);
-    user.password = hashedPassword
+  async createUser(user) {
     try {
       return await this.userRepo.save(user);
     } catch (e) {
       console.log(`Error creating user. Error: ${e}`)
     }
+  }
+
+  async getByEmail(email: string) {
+    const user = await this.userRepo.findOne({ email });
+    if (user) {
+      return user;
+    }
+    throw new HttpException('User with this email does not exist', HttpStatus.NOT_FOUND);
   }
 
   async updateUserPhoneNumberConfirmation(userId): Promise<UserEntity> {

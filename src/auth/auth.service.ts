@@ -1,6 +1,7 @@
-import { toUserDto } from '@mappers/user.mapper';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+
 import { comparePasswords } from '@utils/password.utils';
 
 import { UsersService } from '../users/users.service';
@@ -8,6 +9,9 @@ import { jwtSecret } from './auth.constants';
 import { UserInterface } from '../interfaces/user.interface';
 import { LoginInterface } from 'src/interfaces/login.interface';
 import { UserEntity } from 'src/database/entities/user.entity';
+import PostgresErrorCode from 'src/database/postgresErrorCode.enum';
+import RegisterDto from './dto/register.dto';
+import { throwError } from 'rxjs';
 
 
 @Injectable()
@@ -17,41 +21,39 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) { }
 
-  async validate(email: string, password: string): Promise<UserEntity> | null {
-    const user = await this.usersService.findUser({ email: email });
-
-    if (!user) {
-      return null;
-    }
-
-    const passwordIsValid = comparePasswords(password, user.password);
-    return passwordIsValid ? user : null;
-  }
-
-  async login(user): Promise<LoginInterface> {
-    const payload = {
-      email: user.email,
-      sub: user.id
-    }
-
-    return {
-      accessToken: this.jwtService.sign(payload),
-      username: user.username,
-      id: user.id
+  public async getAuthenticatedUser(email: string, plainTextPassword: string) {
+    try {
+      const user = await this.usersService.getByEmail(email);
+      await this.verifyPassword(plainTextPassword, user.password);
+      user.password = undefined;
+      return user;
+    } catch (error) {
+      throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
     }
   }
 
-  async verify(token: string): Promise<UserInterface> {
-    const decoded = this.jwtService.verify(token, {
-      secret: jwtSecret
-    })
-
-    const user = await this.usersService.findUser({ email: decoded.email });
-
-    if (!user) {
-      throw new Error('Unable to get the user from decoded token.');
+  private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
+    const isPasswordMatching = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword
+    );
+    if (!isPasswordMatching) {
+      throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
     }
-
-    return user;
+  }
+  public async register(registrationData: RegisterDto) {
+    const hashedPassword = await bcrypt.hash(registrationData.password, 10);
+    try {
+      const createdUser = await this.usersService.createUser({
+        ...registrationData,
+        password: hashedPassword
+      });
+      if (createdUser) {
+        createdUser.password = undefined;
+      }
+      return createdUser;
+    } catch (error) {
+      throw (error)
+    }
   }
 }
