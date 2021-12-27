@@ -7,4 +7,5 @@ export class UpsertProfileDto {
   study: string;
   education: string;
   bio: string;
+  teamStatus: string;
 }
