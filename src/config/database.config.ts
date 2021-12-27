@@ -8,9 +8,9 @@ export const defaults = {
   logging: process.env.DB_LOGGING || true,
   ssl: process.env.DB_USE_SSL === 'true' ? { rejectUnauthorized: false } : false,
   synchronize: false,
-  seeds: ['src/database/seeds/**/*.seed.ts'],
-  factories: ['src/database/factories/**/*.factory.ts'],
-  entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
+  seeds: [__dirname + ' /../database/seeds/**/*.seed.ts'],
+  factories: [__dirname + '/../database/factories/**/*.factory.ts'],
+  entities: [__dirname + '/../database/entities/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migration/**/*{.ts,.js}'],
   cli: {
     "migrationsDir": "src/migration",
@@ -19,7 +19,6 @@ export const defaults = {
 };
 
 export const getDatabaseConfig = (): object => {
-  console.log(defaults)
   return defaults;
 };
 

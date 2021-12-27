@@ -1,13 +1,13 @@
 import { toUserDto } from '@mappers/user.mapper';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from '@users/entitites/user.entity';
 import { comparePasswords } from '@utils/password.utils';
 
 import { UsersService } from '../users/users.service';
 import { jwtSecret } from './auth.constants';
 import { UserInterface } from '../interfaces/user.interface';
 import { LoginInterface } from 'src/interfaces/login.interface';
+import { UserEntity } from 'src/database/entities/user.entity';
 
 
 @Injectable()

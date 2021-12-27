@@ -1,9 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql';
 import { IsPhoneNumber, IsNotEmpty } from 'class-validator';
 
-@InputType()
-export class CreateUserInput {
-  @Field()
+export class InitiatePhoneNumberVerificationDto {
   @IsNotEmpty()
   @IsPhoneNumber()
   phoneNumber: string;

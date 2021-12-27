@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from '@users/users.module';
+import { UsersService } from '@users/users.service';
 import { SmsService } from 'src/sms/sms.service';
+import { SmsController } from './sms.controller';
 
 @Module({
-  imports: [ConfigModule],
+  controllers: [SmsController],
+  imports: [ConfigModule, UsersModule],
   providers: [SmsService],
   exports: [SmsService],
 })

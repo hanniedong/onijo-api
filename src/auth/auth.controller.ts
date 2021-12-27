@@ -1,6 +1,6 @@
 import { Controller, Post, Req, UseGuards } from "@nestjs/common";
-import { UserEntity } from "@users/entitites/user.entity";
 import { Request } from 'express';
+import { UserEntity } from "src/database/entities/user.entity";
 import { LoginInterface } from "src/interfaces/login.interface";
 
 import { AuthService } from "./auth.service";

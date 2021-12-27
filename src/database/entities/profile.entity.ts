@@ -1,6 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { UserEntity } from "@users/entitites/user.entity";
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('user_profiles')
 @ObjectType()
@@ -22,10 +21,6 @@ export class ProfileEntity {
 
   @Field()
   @Column({ type: 'varchar', nullable: true })
-  avatar: string;
-
-  @Field()
-  @Column({ type: 'varchar', nullable: true })
   job: string;
 
   @Field()
@@ -43,6 +38,14 @@ export class ProfileEntity {
   @Field()
   @Column({ type: 'varchar', nullable: true })
   bio: string;
+
+  @Column({ type: 'varchar', nullable: true, name: 'team_status' })
+  @Field()
+  teamStatus: string;
+
+  @Column({ type: 'varchar', nullable: true, name: 'mentorship_role' })
+  @Field()
+  mentorshipRole: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;

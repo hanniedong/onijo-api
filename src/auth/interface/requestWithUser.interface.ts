@@ -1,5 +1,5 @@
-import { UserEntity } from '@users/entitites/user.entity';
 import { Request } from 'express';
+import { UserEntity } from 'src/database/entities/user.entity';
 
 
 interface RequestWithUser extends Request {
