@@ -1,8 +1,0 @@
-type Query {
-  teams: [Team]
-}
-
-type Team {
-  id: String
-  displayName: String
-}

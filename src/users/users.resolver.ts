@@ -24,6 +24,18 @@ export class UsersResolver {
     return await this.usersService.findUser(getUserArgs);
   }
 
+  @Query(() => [UserTeamMetadata], { name: 'userTeamMetadata', nullable: true })
+  // @UseGuards(GqlAuthGuard)
+  async getUserTeams(@Args() getUserArgs: GetUserArgs): Promise<any> {
+    try {
+      const teams = await this.usersService.getUserTeamMetadata(getUserArgs)
+      console.log(teams.length)
+      return teams
+    } catch (error) {
+      throw error
+    }
+  }
+
   // @Query(() => [User], { name: 'users', nullable: 'items' })
   // getUsers(@Args() getUsersArgs: GetUsersArgs): User[] {
   //   return this.usersService.getUsers(getUsersArgs);

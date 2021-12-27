@@ -57,6 +57,11 @@ export class UsersService {
     return await this.userTeamMetadataRepo.save(userTeamMetadata)
   }
 
+  async getUserTeamMetadata(userId): Promise<UserTeamMetadata[]> {
+    return await this.userTeamMetadataRepo.find({
+      where: { user: userId }, relations: ['team', 'team.organization']
+    })
+  }
 
   async findUser(options): Promise<UserEntity> {
     return await this.userRepo.findOne(options);

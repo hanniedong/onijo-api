@@ -31,10 +31,11 @@ export class UserTeamMetadata {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 
+  @Field()
   @ManyToOne(type => TeamEntity, team => team.id)
   @JoinColumn({ name: 'team_id', referencedColumnName: 'id' })
   team: TeamEntity;
-
+  s
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 
