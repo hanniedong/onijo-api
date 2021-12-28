@@ -2,16 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
-import { comparePasswords } from '@utils/password.utils';
 
 import { UsersService } from '../users/users.service';
-import { jwtSecret } from './auth.constants';
-import { UserInterface } from '../interfaces/user.interface';
 import { LoginInterface } from 'src/interfaces/login.interface';
-import { UserEntity } from 'src/database/entities/user.entity';
-import PostgresErrorCode from 'src/database/postgresErrorCode.enum';
 import RegisterDto from './dto/register.dto';
-import { throwError } from 'rxjs';
 
 
 @Injectable()
@@ -20,6 +14,18 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) { }
+
+  async login(user): Promise<LoginInterface> {
+    const payload = {
+      email: user.email,
+      sub: user.id
+    }
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+      id: user.id
+    }
+  }
 
   public async getAuthenticatedUser(email: string, plainTextPassword: string) {
     try {
@@ -32,11 +38,8 @@ export class AuthService {
     }
   }
 
-  private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
-    const isPasswordMatching = await bcrypt.compare(
-      plainTextPassword,
-      hashedPassword
-    );
+  async verifyPassword(plainTextPassword: string, hashedPassword: string) {
+    const isPasswordMatching = await bcrypt.compare(plainTextPassword, hashedPassword)
     if (!isPasswordMatching) {
       throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
     }
