@@ -28,9 +28,7 @@ export class UsersResolver {
   @UseGuards(GqlAuthGuard)
   async getUserTeams(@Args() getUserArgs: GetUserArgs): Promise<any> {
     try {
-      console.log(getUserArgs)
       const teams = await this.usersService.getUserTeamMetadata(getUserArgs)
-      console.log(teams.length)
       return teams
     } catch (error) {
       throw error

@@ -47,14 +47,29 @@ export class UsersService {
   }
 
   async upsertUserTeamMetadata(updateUserTeamMetadata, userId): Promise<UserTeamMetadata> {
-    const user = await this.findUser(userId)
-    const team = await this.teamRepo.findOne(updateUserTeamMetadata.teamId)
-    const userTeamMetadata: UserTeamMetadata = {
-      ...updateUserTeamMetadata
+    try {
+      const user = await this.findUser(userId)
+      const team = await this.teamRepo.findOne(updateUserTeamMetadata.teamId)
+
+      const userTeamMetadata: UserTeamMetadata = {
+        ...updateUserTeamMetadata
+      }
+      userTeamMetadata.user = user
+      userTeamMetadata.team = team
+      return await this.userTeamMetadataRepo.save(userTeamMetadata)
+    } catch (e) {
+      if (e.code === '23505') {
+        const existingUserTeamMetadata = await this.userTeamMetadataRepo.findOne({ where: { user: userId, team: updateUserTeamMetadata.teamId } })
+        const userTeamMetadata: UserTeamMetadata = {
+          ...existingUserTeamMetadata,
+        }
+        userTeamMetadata.yearEnded = updateUserTeamMetadata.yearEnded
+        userTeamMetadata.yearJoined = updateUserTeamMetadata.yearJoined
+        return await this.userTeamMetadataRepo.save(userTeamMetadata)
+      } else {
+        throw e
+      }
     }
-    userTeamMetadata.user = user
-    userTeamMetadata.team = team
-    return await this.userTeamMetadataRepo.save(userTeamMetadata)
   }
 
   async getUserTeamMetadata(userId): Promise<UserTeamMetadata[]> {
