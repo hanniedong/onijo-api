@@ -16,7 +16,6 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { ProfileEntity } from './profile.entity';
 import { File } from './file.entity';
 import { UserTeamMetadata } from './user-team-metadata.entity';
-import { isEmail } from 'class-validator';
 
 @Entity('users')
 @ObjectType()
@@ -52,11 +51,10 @@ export class UserEntity {
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
-    console.log("hashed")
     return this.password = await bcrypt.hash(this.password, 10);
   }
 
-  @Field()
+  @Field(() => ProfileEntity)
   @OneToOne(() => ProfileEntity)
   @JoinColumn({ name: 'profile_id' })
   profile: ProfileEntity;
