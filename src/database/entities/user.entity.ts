@@ -16,7 +16,6 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { ProfileEntity } from './profile.entity';
 import { File } from './file.entity';
 import { UserTeamMetadata } from './user-team-metadata.entity';
-import { isEmail } from 'class-validator';
 
 @Entity('users')
 @ObjectType()
@@ -30,8 +29,7 @@ export class UserEntity {
   @Generated("uuid")
   uuid: string;
 
-
-  @Column({ type: 'varchar', nullable: true, })
+  @Column({ type: 'varchar', nullable: true, length: 200 })
   @Field()
   password: string;
 
