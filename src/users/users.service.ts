@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -9,6 +9,7 @@ import { UserEntity } from "../database/entities/user.entity";
 import { FilesService } from "src/files/files.service";
 import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
 import { TeamEntity } from "src/database/entities/team.entity";
+import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUserArgs } from "./dto/args/get-user.args";
 // import { GetUsersArgs } from "./dto/args/get-users.args";
 // import { CreateUserInput } from "./dto/input/create-user.input";
@@ -37,6 +38,9 @@ export class UsersService {
     try {
       return await this.userRepo.save(user);
     } catch (e) {
+      if (e.code === '23505') {
+        throw new BadRequestException('User already created. Please login.');
+      }
       console.log(`Error creating user. Error: ${e}`)
     }
   }
@@ -72,9 +76,10 @@ export class UsersService {
     }
   }
 
-  async getUserTeamMetadata(userId): Promise<UserTeamMetadata[]> {
+  async getUserTeamMetadata(args: GetUserArgs): Promise<UserTeamMetadata[]> {
+    const { id } = args
     return await this.userTeamMetadataRepo.find({
-      where: { user: userId }, relations: ['team', 'team.organization']
+      where: { user: id }, relations: ['team', 'team.organization']
     })
   }
 

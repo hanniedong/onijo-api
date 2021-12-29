@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ProfileEntity } from "src/database/entities/profile.entity";
 import { UserEntity } from "../database/entities/user.entity";
 import { FilesService } from "src/files/files.service";
+import { GetUserProfileArgs } from "./args/get-user-profile.args";
 
 @Injectable()
 export class ProfilesService {
@@ -29,6 +30,18 @@ export class ProfilesService {
     return await this.userRepo.save(user)
   }
 
+  async getProfile(args: GetUserProfileArgs): Promise<ProfileEntity> {
+    try {
+      const { userId } = args
+      const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
+      console.log(user)
+      if (user?.profile) {
+        return user.profile
+      }
+    } catch (e) {
+      throw e
+    }
+  }
 
   async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
     const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);

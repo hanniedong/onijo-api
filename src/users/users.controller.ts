@@ -26,7 +26,7 @@ export class UsersController {
     try {
       return await this.usersService.createUser(createUserDto);
     } catch (e) {
-      console.error(e)
+      throw (e)
     }
   }
 

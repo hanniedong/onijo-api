@@ -8,10 +8,8 @@ import { GetUserProfileArgs } from "./args/get-user-profile.args";
 export class ProfilesResolver {
   constructor(private readonly profilesService: ProfilesService) { }
 
-  // @Query(() => ProfileEntity, { name: 'profile', nullable: true })
-  // // @UseGuards(GqlAuthGuard)
-  // async getUserProfile(@Args() getUserProfileArgs: GetUserProfileArgs): Promise<ProfileEntity> {
-  //   console.log("GET")
-  //   return await this.profilesService.getProfile(getUserProfileArgs);
-  // }
+  @Query(() => ProfileEntity, { name: 'profile', nullable: true })
+  async getUserProfile(@Args() getUserProfileArgs: GetUserProfileArgs): Promise<ProfileEntity> {
+    return await this.profilesService.getProfile(getUserProfileArgs);
+  }
 }

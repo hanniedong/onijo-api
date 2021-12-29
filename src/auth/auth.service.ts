@@ -32,10 +32,9 @@ export class AuthService {
       email: user.email,
       sub: user.id
     }
-    console.log(user)
 
     return {
-      accessToken: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
       username: user.username,
       id: user.id,
       uuid: user.uuid
