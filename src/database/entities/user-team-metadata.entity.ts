@@ -29,12 +29,12 @@ export class UserTeamMetadata {
   @Field()
   yearEnded: number;
 
-  @ManyToOne(type => UserEntity, user => user.id)
+  @ManyToOne(type => UserEntity, user => user.userTeamMetadata)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 
-  @Field()
-  @ManyToOne(type => TeamEntity, team => team.id)
+  @Field({nullable:true})
+  @ManyToOne(type => TeamEntity, team => team.userTeamMetadata)
   @JoinColumn({ name: 'team_id', referencedColumnName: 'id' })
   team: TeamEntity;
 

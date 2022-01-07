@@ -1,11 +1,17 @@
-import { Field, ObjectType } from "@nestjs/graphql";
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Field, ObjectType } from '@nestjs/graphql';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('user_profiles')
 @ObjectType()
 export class ProfileEntity {
-
   @PrimaryGeneratedColumn()
+  @Field()
   id: string;
 
   @Field()
@@ -17,34 +23,34 @@ export class ProfileEntity {
   lastName: string;
 
   @Column({ type: 'timestamptz' })
-  birthday: String;
+  birthday: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', nullable: true })
   job: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', nullable: true })
   company: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', nullable: true })
   study: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', nullable: true })
   education: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ type: 'varchar', nullable: true })
   bio: string;
 
   @Column({ type: 'varchar', nullable: true, name: 'team_status' })
-  @Field()
+  @Field({ nullable: true })
   teamStatus: string;
 
   @Column({ type: 'varchar', nullable: true, name: 'mentorship_role' })
-  @Field()
+  @Field({ nullable: true })
   mentorshipRole: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })

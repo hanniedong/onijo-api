@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { ProfileEntity } from "src/database/entities/profile.entity";
-import { UserEntity } from "../database/entities/user.entity";
-import { FilesService } from "src/files/files.service";
-import { GetUserProfileArgs } from "./args/get-user-profile.args";
+import { ProfileEntity } from 'src/database/entities/profile.entity';
+import { UserEntity } from '../database/entities/user.entity';
+import { FilesService } from 'src/files/files.service';
+import { GetUserProfileArgs } from './args/get-user-profile.args';
 
 @Injectable()
 export class ProfilesService {
@@ -14,43 +14,62 @@ export class ProfilesService {
     private readonly userRepo: Repository<UserEntity>,
     @InjectRepository(ProfileEntity)
     private readonly userProfileRepo: Repository<ProfileEntity>,
-    private readonly filesService: FilesService
-  ) { }
+    private readonly filesService: FilesService,
+  ) {}
 
-  async upsertProfile(createProfileData, userId) {
-    const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
+  async upsertProfile(profileData, userId) {
+    const user = await this.userRepo.findOne(userId, {
+      relations: ['profile'],
+    });
 
     const profile: ProfileEntity = {
       ...user.profile,
-      ...createProfileData
-    }
-    await this.userProfileRepo.save(profile)
+      ...profileData,
+    };
+    await this.userProfileRepo.save(profile);
 
-    user.profile = profile
-    return await this.userRepo.save(user)
+    user.profile = profile;
+    return await this.userRepo.save(user);
   }
 
   async getProfile(args: GetUserProfileArgs): Promise<ProfileEntity> {
     try {
-      const { userId } = args
-      const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
-      console.log(user)
+      const { userId } = args;
+      const user = await this.userRepo.findOne(userId, {
+        relations: ['profile'],
+      });
       if (user?.profile) {
-        return user.profile
+        return user.profile;
       }
     } catch (e) {
-      throw e
+      throw e;
     }
   }
 
   async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
-    const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
-    const user = await this.userRepo.findOne(userId, { relations: ['profile'] })
+    const avatar = await this.filesService.uploadPublicFile(
+      imageBuffer,
+      filename,
+    );
+    const user = await this.userRepo.findOne(userId, {
+      relations: ['profile'],
+    });
     await this.userRepo.update(userId, {
       ...user,
-      avatar
+      avatar,
     });
     return avatar;
   }
 
+  public async getProfiles(query): Promise<ProfileEntity[]> {
+    console.log(query);
+    console.log(
+      await this.userProfileRepo.find({
+        where: { firstName: query },
+      }),
+    );
+    return await this.userProfileRepo.find({
+      where: { firstName: query },
+    });
+  }
 }

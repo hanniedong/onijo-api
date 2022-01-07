@@ -15,7 +15,6 @@ export class ProfilesController {
   @UseGuards(JwtAuthGuard)
   async createProfile(@Req() request: RequestWithUser, @Body() upsertProfileDto: UpsertProfileDto) {
     try {
-      console.log(request.user)
       return await this.profilesService.upsertProfile(upsertProfileDto, request.user.id);
     } catch (e) {
       console.error(e)

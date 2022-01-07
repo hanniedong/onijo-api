@@ -1,22 +1,23 @@
-import { UseGuards } from "@nestjs/common";
-import { Resolver, Query, Args, Mutation } from "@nestjs/graphql";
-import { UserInterface } from "src/interfaces/user.interface";
-import { CurrentUser } from "../auth/current-user.decorator";
-import { GqlAuthGuard } from "../auth/guards/gql-auth.guard";
-import { UserEntity } from "../database/entities/user.entity";
-import { GetUserArgs } from "./dto/args/get-user.args";
+import { UseGuards } from '@nestjs/common';
+import { Resolver, Query, Args } from '@nestjs/graphql';
+import { UserInterface } from 'src/interfaces/user.interface';
+import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { UserEntity } from '../database/entities/user.entity';
+import { GetUserArgs } from './dto/args/get-user.args';
 // import { GetUsersArgs } from "./dto/args/get-users.args";
 // import { DeleteUserInput } from "./dto/input/delete-user.input";
 // import { UpdateUserInput } from "./dto/input/update-user.input";
 
-
-import { UsersService } from "./users.service";
-import { UserDto } from "./dto/user.dto";
-import { UserTeamMetadata } from "src/database/entities/user-team-metadata.entity";
+import { UsersService } from './users.service';
+import { UserTeamMetadata } from 'src/database/entities/user-team-metadata.entity';
+import { File } from 'src/database/entities/file.entity';
+import { GetUserAvatarArgs } from './dto/args/get-user-avatar.args';
+import { GetUsersArgs } from './dto/args/get-users.args';
+import { ProfileEntity } from 'src/database/entities/profile.entity';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Query(() => UserEntity, { name: 'user', nullable: true })
   @UseGuards(GqlAuthGuard)
@@ -24,15 +25,36 @@ export class UsersResolver {
     return await this.usersService.findUser(getUserArgs);
   }
 
+  @Query(() => File, { name: 'userAvatar', nullable: true })
+  @UseGuards(GqlAuthGuard)
+  async getUserAvatar(
+    @Args() getUserAvatarArgs: GetUserAvatarArgs,
+  ): Promise<any> {
+    const user = await this.usersService.getUserAvatar(getUserAvatarArgs);
+    return user.avatar;
+  }
+
   @Query(() => [UserTeamMetadata], { name: 'userTeamMetadata', nullable: true })
-  // @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   async getUserTeams(@Args() getUserArgs: GetUserArgs): Promise<any> {
-    console.log("HIT")
     try {
-      const teams = await this.usersService.getUserTeamMetadata(getUserArgs)
-      return teams
+      const teams = await this.usersService.getUserTeamMetadata(getUserArgs);
+      return teams;
     } catch (error) {
-      throw error
+      throw error;
+    }
+  }
+
+  @Query(() => [UserEntity], { name: 'profiles', nullable: true })
+  // @UseGuards(GqlAuthGuard)
+  async getUserProfiles(
+    @Args() getUserProfilesQueryArgs: GetUsersArgs,
+  ): Promise<UserEntity[]> {
+    const { query } = getUserProfilesQueryArgs;
+    try {
+      return await this.usersService.getUsers(query);
+    } catch (e) {
+      throw e;
     }
   }
 
