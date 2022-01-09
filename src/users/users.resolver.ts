@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UserInterface } from 'src/interfaces/user.interface';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { UserEntity } from '../database/entities/user.entity';
@@ -35,7 +35,7 @@ export class UsersResolver {
   }
 
   @Query(() => [UserTeamMetadata], { name: 'userTeamMetadata', nullable: true })
-  @UseGuards(GqlAuthGuard)
+  // @UseGuards(GqlAuthGuard)
   async getUserTeams(@Args() getUserArgs: GetUserArgs): Promise<any> {
     try {
       const teams = await this.usersService.getUserTeamMetadata(getUserArgs);
@@ -45,14 +45,12 @@ export class UsersResolver {
     }
   }
 
-  @Query(() => [UserEntity], { name: 'profiles', nullable: true })
+  @Query(() => [UserEntity], { name: 'searchUsers', nullable: true })
   // @UseGuards(GqlAuthGuard)
-  async getUserProfiles(
-    @Args() getUserProfilesQueryArgs: GetUsersArgs,
-  ): Promise<UserEntity[]> {
-    const { query } = getUserProfilesQueryArgs;
+  async searchUsers(@Args() getUsersArgs: GetUsersArgs): Promise<UserEntity[]> {
+    const { query } = getUsersArgs;
     try {
-      return await this.usersService.getUsers(query);
+      return await this.usersService.searchUsers(query);
     } catch (e) {
       throw e;
     }

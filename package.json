@@ -29,6 +29,8 @@
   },
   "dependencies": {
     "@apollo/gateway": "^0.38.2",
+    "@elastic/elasticsearch": "^7.16.0",
+    "@nestjs/axios": "^0.0.4",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.0",
     "@nestjs/core": "^8.0.0",
@@ -45,6 +47,7 @@
     "apollo-server-core": "^3.5.0",
     "apollo-server-express": "^3.5.0",
     "aws-sdk": "^2.1045.0",
+    "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.2",

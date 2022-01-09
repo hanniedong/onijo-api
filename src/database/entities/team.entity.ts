@@ -15,14 +15,16 @@ import { UserTeamMetadata } from './user-team-metadata.entity';
 @Entity('teams')
 @ObjectType()
 export class TeamEntity {
+
   @PrimaryGeneratedColumn()
-  @Field()
+  @Field({ nullable: true })
   id: number;
 
   @Column({ type: 'varchar', name: 'display_name' })
   @Field({ nullable: true })
   displayName: string;
 
+  @Field(() => UserTeamMetadata)
   @OneToMany(
     (type) => UserTeamMetadata,
     (userTeamMetadata) => userTeamMetadata.team,
