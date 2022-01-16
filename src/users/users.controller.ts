@@ -26,19 +26,18 @@ export class UsersController {
     try {
       return await this.usersService.createUser(createUserDto);
     } catch (e) {
-      console.error(e)
+      throw (e)
     }
   }
 
-  @Patch('teams')
+  @Post('teams')
   @UseGuards(JwtAuthGuard)
-  async updateUserTeamMetadata(@Body()
+  async createUserTeamMetadata(@Body()
   UpdateUserTeamMetadataDto: UpdateUserTeamMetadataDto, @Req() request: RequestWithUser,) {
     try {
-      Promise.all(UpdateUserTeamMetadataDto?.teams.map(async (updateUserTeamMetadataDto) => {
-        console.log("HOIT")
-        return await this.usersService.upsertUserTeamMetadata(updateUserTeamMetadataDto, request.user.id);
-      }))
+      for (const team of UpdateUserTeamMetadataDto.teams) {
+        await this.usersService.upsertUserTeamMetadata(team, request.user.id);
+      }
     } catch (e) {
       console.error(e)
     }

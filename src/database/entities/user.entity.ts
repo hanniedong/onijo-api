@@ -4,19 +4,15 @@ import {
   Column,
   CreateDateColumn,
   OneToOne,
-  BeforeInsert,
   UpdateDateColumn,
   JoinColumn,
   Generated,
   OneToMany,
-  BeforeUpdate
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
 import { ProfileEntity } from './profile.entity';
 import { File } from './file.entity';
 import { UserTeamMetadata } from './user-team-metadata.entity';
-import { isEmail } from 'class-validator';
 
 @Entity('users')
 @ObjectType()
@@ -27,11 +23,10 @@ export class UserEntity {
   id: number;
 
   @Column()
-  @Generated("uuid")
+  @Generated('uuid')
   uuid: string;
 
-
-  @Column({ type: 'varchar', nullable: true, })
+  @Column({ type: 'varchar', nullable: true, length: 300 })
   @Field()
   password: string;
 
@@ -43,36 +38,30 @@ export class UserEntity {
   @Field()
   phoneNumber: string;
 
-  @Column({ type: 'timestamptz', name: 'password_last_updated_at', nullable: true })
+  @Column({
+    type: 'timestamptz',
+    name: 'password_last_updated_at',
+    nullable: true,
+  })
   passwordLastUpdatedAt: Date;
 
   @Column({ default: false, name: 'is_phone_number_confirmed' })
   isPhoneNumberConfirmed: boolean;
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword() {
-    console.log("hashed")
-    return this.password = await bcrypt.hash(this.password, 10);
-  }
 
   @Field()
   @OneToOne(() => ProfileEntity)
   @JoinColumn({ name: 'profile_id' })
   profile: ProfileEntity;
 
-  @Field()
-  @OneToMany(type => UserTeamMetadata, userTeamMetadata => userTeamMetadata.id)
+  @Field({ nullable: true })
+  @OneToMany(
+    (type) => UserTeamMetadata,
+    (userTeamMetadata) => userTeamMetadata.user,
+  )
   userTeamMetadata: UserTeamMetadata;
 
   @JoinColumn({ name: 'avatar_id' })
-  @OneToOne(
-    () => File,
-    {
-      eager: true,
-      nullable: true
-    }
-  )
+  @OneToOne(() => File, { eager: true, nullable: true })
   public avatar?: File;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })

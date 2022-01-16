@@ -8,7 +8,7 @@ import { jwtSecret } from './auth.constants';
 import { UserInterface } from '../interfaces/user.interface';
 import { LoginInterface } from 'src/interfaces/login.interface';
 import { UserEntity } from 'src/database/entities/user.entity';
-
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthService {
@@ -23,8 +23,8 @@ export class AuthService {
     if (!user) {
       return null;
     }
-
-    const passwordIsValid = comparePasswords(password, user.password);
+    console.log(user.password)
+    const passwordIsValid = await bcrypt.compare(password, user.password);
     return passwordIsValid ? user : null;
   }
 
@@ -35,9 +35,10 @@ export class AuthService {
     }
 
     return {
-      accessToken: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
       username: user.username,
-      id: user.id
+      id: user.id,
+      uuid: user.uuid
     }
   }
 
