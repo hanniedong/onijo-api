@@ -49,6 +49,21 @@ export class CommunitiesService {
     return communities;
   }
 
+    public async getAllCommunities(): Promise<any> {
+    const { body } = await this.elasticSearchService.search({
+      index: COMMUNITIES_INDEX,
+      sort: ["displayName.keyword:asc"]
+    });
+    const communities = body.hits.hits.map((result) => ({
+      communityId: result._source.communityId,
+      displayName: result._source.displayName,
+      description: result._source.description,
+      avatarFileId: result._source.avatarFileId,
+      membersCount: result._source.membersCount,
+    }));
+    return communities;
+  }
+
   async populateCommunitiesInElasticSearch(): Promise<any> {
     // communities
     const communities = await firstValueFrom(this.getCommunities());
@@ -58,13 +73,13 @@ export class CommunitiesService {
       await this.elasticSearchService.deleteIndices(COMMUNITIES_INDEX);
     }
 
-    await this.elasticSearchService.createIndices(COMMUNITIES_INDEX, {
-      id: { type: 'number' },
-      uuid: { type: 'string' },
-    });
+    await this.elasticSearchService.createIndices(COMMUNITIES_INDEX, {});
+
+    console.log(communities.data.communities)
 
     const communitiesData = communities.data.communities.map((community) => ({
-      communityId: community._id,
+      id: community._id,
+      communityId: community.communityId,
       displayName: community.displayName,
       description: community.description,
       avatarFileId: community.avatarFileId,

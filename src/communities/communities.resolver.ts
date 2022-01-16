@@ -10,13 +10,23 @@ export class CommunitiesResolver {
   constructor(private readonly communitiesService: CommunitiesService) {}
 
   @Query(() => [Community], { name: 'searchCommunities', nullable: true })
-  @UseGuards(GqlAuthGuard)
+  // @UseGuards(GqlAuthGuard)
   async searchCommunites(
     @Args() getCommunitiesArgs: GetCommunitiesArgs,
   ): Promise<Community[]> {
     const { query } = getCommunitiesArgs;
     try {
       return await this.communitiesService.searchCommunities(query);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @Query(() => [Community], { name: 'getCommunities', nullable: true })
+  // @UseGuards(GqlAuthGuard)
+  async getCommunities(): Promise<Community[]> {
+    try {
+      return await this.communitiesService.getAllCommunities();
     } catch (e) {
       throw e;
     }

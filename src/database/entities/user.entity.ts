@@ -22,11 +22,11 @@ export class UserEntity {
   id: number;
 
   @Column()
+  @Field()
   @Generated('uuid')
   uuid: string;
 
   @Column({ type: 'varchar', nullable: true, length: 300 })
-  @Field()
   password: string;
 
   @Column({ type: 'varchar', nullable: true, unique: true })
@@ -47,7 +47,7 @@ export class UserEntity {
   @Column({ default: false, name: 'is_phone_number_confirmed' })
   isPhoneNumberConfirmed: boolean;
 
-  @Field()
+  @Field({ nullable: true})
   @OneToOne(() => ProfileEntity)
   @JoinColumn({ name: 'profile_id' })
   profile: ProfileEntity;

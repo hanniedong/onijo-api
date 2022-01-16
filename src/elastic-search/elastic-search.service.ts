@@ -43,7 +43,7 @@ export class ElasticSearchService {
     const ELASTIC_CONCURRENCY_COUNT = 5;
     const ELASTIC_BODY_SIZE_IN_BYTES = 3000000;
     const ELASTIC_FLUSH_INTERVAL_IN_MS = 30000;
-console.log(items)
+
     try {
       return await this.client.helpers.bulk({
         datasource: items,

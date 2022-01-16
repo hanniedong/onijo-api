@@ -121,11 +121,11 @@ export class UsersService {
           multi_match: {
             query: query,
             fields: [
-              'profile.firstName',
-              'profile.lastName',
-              'userTeamMetadata.team.displayName',
-              'profile.job',
-              'profile.company',
+              'profile.firstName.keyword',
+              'profile.lastName.keyword',
+              'userTeamMetadata.team.displayName.keyword',
+              'profile.job.keyword',
+              'profile.company.keyword',
             ],
           },
         },
@@ -133,6 +133,48 @@ export class UsersService {
     });
     const users = body.hits.hits.map((result) => ({
       id: result._source.id,
+      uuid: result._source.uuid,
+      avatar: result._source.avatar,
+      profile: result._source.profile,
+      userTeamMetadata: result._source.userTeamMetadata,
+    }));
+    return users;
+  }
+
+  public async getUsers(userIds): Promise<any> {
+    console.log(userIds)
+    const { body } = await this.elasticSearchService.search({
+      index: USERS_INDEX,
+      body: {
+        query: {
+          bool:{
+            must: {
+              terms:{
+                "uuid.keyword": userIds
+            }
+          }
+        }
+      },
+    },
+  });
+    const users = body.hits.hits.map((result) => ({
+      id: result._source.id,
+      uuid: result._source.uuid,
+      avatar: result._source.avatar,
+      profile: result._source.profile,
+      userTeamMetadata: result._source.userTeamMetadata,
+    }));
+    return users;
+  }
+
+  public async getAllUsers(): Promise<any> {
+    const { body } = await this.elasticSearchService.search({
+      index: USERS_INDEX,
+      sort: ["profile.firstName.keyword:asc"]
+    });
+    const users = body.hits.hits.map((result) => ({
+      id: result._source.id,
+      uuid: result._source.uuid,
       avatar: result._source.avatar,
       profile: result._source.profile,
       userTeamMetadata: result._source.userTeamMetadata,
@@ -155,9 +197,17 @@ export class UsersService {
       await this.elasticSearchService.deleteIndices(USERS_INDEX);
     }
 
+    const usersData = users.map((user)=> ({
+      id: user.id,
+      uuid: user.uuid,
+      avatar: user.avatar,
+      profile: user.profile,
+      userTeamMetadata: user.userTeamMetadata, 
+    }))
+
     await this.elasticSearchService.createIndices(USERS_INDEX, {});
     const usersBulkUpload = await this.elasticSearchService.bulkUpload(
-      users,
+      usersData,
       USERS_INDEX,
     );
     return usersBulkUpload;

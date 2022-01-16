@@ -8,9 +8,12 @@ import { AppModule } from './app.module';
 const API_VERSION = 'api/v1';
 
 async function bootstrap() {
+  console.log("HIT")
+  try{
   const app = await NestFactory.create(AppModule, {
     logger: ['warn', 'error', 'log'],
   });
+
   Sentry.init({
     dsn: process.env.SENTRY_URL,
     environment: process.env.ENV_NAME,
@@ -34,6 +37,8 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 4040;
-  await app.listen(port);
+  }catch(e){
+    console.log(e)
+  }
 }
 bootstrap();

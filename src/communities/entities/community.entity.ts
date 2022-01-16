@@ -13,7 +13,7 @@ export class Community {
   @Field()
   public description: string;
 
-  @Field()
+  @Field({nullable:true})
   public avatarFileId: string;
 
   @Field()
