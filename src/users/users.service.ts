@@ -92,9 +92,38 @@ export class UsersService {
   }
 
   async findUser(options): Promise<any> {
-    const user = await this.userRepo.findOne(options);
+    const user = await this.userRepo.findOne(options, { relations: [
+      'profile',
+      'userTeamMetadata',
+      'userTeamMetadata.team',
+      'userTeamMetadata.team.organization',
+    ],});
     return user;
   }
+
+  async addUserToElasticSearch(args): Promise<any> {
+    try {
+      const user = await this.userRepo.findOne(args, { relations: [
+        'profile',
+        'userTeamMetadata',
+        'userTeamMetadata.team',
+        'userTeamMetadata.team.organization',
+      ],});
+  
+      const userData = {
+        id: user.id,
+        uuid: user.uuid,
+        avatar: user.avatar,
+        profile: user.profile,
+        userTeamMetadata: user.userTeamMetadata, 
+      }
+  
+     return await this.elasticSearchService.upsertDocument(USERS_INDEX, user.id, userData)
+    } catch(e){
+      throw e
+    }
+  }
+
 
   async getUserAvatar(userAvatarArgs: GetUserAvatarArgs): Promise<any> {
     return await this.userRepo.findOne({ where: userAvatarArgs });
@@ -142,7 +171,6 @@ export class UsersService {
   }
 
   public async getUsers(userIds): Promise<any> {
-    console.log(userIds)
     const { body } = await this.elasticSearchService.search({
       index: USERS_INDEX,
       body: {

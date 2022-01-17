@@ -1,5 +1,4 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-
 import { Injectable, Logger } from '@nestjs/common';
 import { Client } from '@elastic/elasticsearch';
 
@@ -91,7 +90,7 @@ export class ElasticSearchService {
     }
   }
 
-  async upsertDocument(index: string, id: string, doc: object): Promise<any> {
+  async upsertDocument(index: string, id: number, doc: object): Promise<any> {
     const body = {
       doc: {
         ...doc,

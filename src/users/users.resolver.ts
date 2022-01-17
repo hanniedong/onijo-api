@@ -21,9 +21,16 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => UserEntity, { name: 'user', nullable: true })
-  @UseGuards(GqlAuthGuard)
+  // @UseGuards(GqlAuthGuard)
   async getUser(@Args() getUserArgs: GetUserArgs): Promise<UserInterface> {
     return await this.usersService.findUser(getUserArgs);
+  }
+
+  @Mutation(() => UserEntity, { name: 'addUserToElasticSearch', nullable: true })
+  // @UseGuards(GqlAuthGuard)
+  async addUserToElasticSearch(@Args() getUserArgs: GetUserArgs): Promise<UserInterface> {
+    console.log(await this.usersService.addUserToElasticSearch(getUserArgs))
+    return await this.usersService.addUserToElasticSearch(getUserArgs);
   }
 
   @Query(() => File, { name: 'userAvatar', nullable: true })
@@ -36,7 +43,7 @@ export class UsersResolver {
   }
 
   @Query(() => [UserTeamMetadata], { name: 'userTeamMetadata', nullable: true })
-  // @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   async getUserTeams(@Args() getUserArgs: GetUserArgs): Promise<any> {
     try {
       const teams = await this.usersService.getUserTeamMetadata(getUserArgs);
@@ -47,7 +54,7 @@ export class UsersResolver {
   }
 
   @Query(() => [UserEntity], { name: 'searchUsers', nullable: true })
-  // @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   async searchUsers(@Args() searchUsersArgs: SearchUsersArgs): Promise<UserEntity[]> {
     const { query } = searchUsersArgs;
     try {
@@ -59,7 +66,7 @@ export class UsersResolver {
   }
 
   @Query(() => [UserEntity], { name: 'getUsersByIds', nullable: true })
-  // @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   async getUsers(@Args() getUsersArgs: GetUsersArgs): Promise<UserEntity[]> {
     const { userIds } = getUsersArgs;
     try {
@@ -70,7 +77,7 @@ export class UsersResolver {
   }
 
   @Query(() => [UserEntity], { name: 'getUsers', nullable: true })
-  // @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   async getAllUsers(): Promise<UserEntity[]> {
     try {
       return await this.usersService.getAllUsers();
@@ -78,6 +85,7 @@ export class UsersResolver {
       throw e;
     }
   }
+
   // @Query(() => [User], { name: 'users', nullable: 'items' })
   // getUsers(@Args() getUsersArgs: GetUsersArgs): User[] {
   //   return this.usersService.getUsers(getUsersArgs);

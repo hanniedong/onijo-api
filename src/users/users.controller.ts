@@ -57,6 +57,7 @@ export class UsersController {
       for (const team of UpdateUserTeamMetadataDto.teams) {
         await this.usersService.upsertUserTeamMetadata(team, request.user.id);
       }
+      await this.usersService.addUserToElasticSearch(request.user.id)
     } catch (e) {
       console.error(e);
     }
