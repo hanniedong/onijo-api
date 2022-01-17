@@ -1,0 +1,1 @@
+{"version":3,"file":"create-organizations.seeds.js","sourceRoot":"","sources":["../../../../src/database/seeds/create-organizations.seeds.ts"],"names":[],"mappings":";;AAAA,yEAAoE;AAGpE,MAAqB,mBAAmB;IAC/B,KAAK,CAAC,GAAG,CAAC,OAAgB;QAC/B,MAAM,OAAO,CAAC,wCAAkB,CAAC,EAAE,CAAC,UAAU,CAAC,GAAG,CAAC,CAAA;IACrD,CAAC;CACF;AAJD,sCAIC"}
