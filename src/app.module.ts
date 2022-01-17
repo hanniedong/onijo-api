@@ -13,10 +13,14 @@ import { SmsModule } from './sms/sms.module';
 import { TeamsModule } from './teams/teams.module';
 import { FilesModule } from './files/files.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { ElasticSearchModule } from './elastic-search/elastic-search.module';
+import { CommunitiesModule } from './communities/communities.module';
 
 @Module({
   controllers: [AppController],
   imports: [
+    CommunitiesModule,
+    ElasticSearchModule,
     ConfigModule.forRoot({ load: [getDatabaseConfig] }),
     AuthModule,
     UsersModule,
@@ -41,4 +45,4 @@ import { ProfilesModule } from './profiles/profiles.module';
   ],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

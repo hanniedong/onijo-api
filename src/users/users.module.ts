@@ -8,6 +8,7 @@ import { FilesModule } from 'src/files/files.module';
 import { UsersController } from './users.controller';
 import { UserTeamMetadata } from 'src/database/entities/user-team-metadata.entity';
 import { TeamEntity } from 'src/database/entities/team.entity';
+import { ElasticSearchModule } from 'src/elastic-search/elastic-search.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TeamEntity } from 'src/database/entities/team.entity';
       TeamEntity,
     ]),
     FilesModule,
+    ElasticSearchModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, UsersResolver],

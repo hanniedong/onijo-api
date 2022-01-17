@@ -23,7 +23,6 @@ export class AuthService {
     if (!user) {
       return null;
     }
-    console.log(user.password)
     const passwordIsValid = await bcrypt.compare(password, user.password);
     return passwordIsValid ? user : null;
   }
@@ -33,7 +32,7 @@ export class AuthService {
       email: user.email,
       sub: user.id
     }
-
+    
     return {
       token: this.jwtService.sign(payload),
       username: user.username,

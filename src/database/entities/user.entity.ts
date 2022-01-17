@@ -17,17 +17,16 @@ import { UserTeamMetadata } from './user-team-metadata.entity';
 @Entity('users')
 @ObjectType()
 export class UserEntity {
-
   @PrimaryGeneratedColumn()
   @Field()
   id: number;
 
   @Column()
+  @Field()
   @Generated('uuid')
   uuid: string;
 
   @Column({ type: 'varchar', nullable: true, length: 300 })
-  @Field()
   password: string;
 
   @Column({ type: 'varchar', nullable: true, unique: true })
@@ -48,18 +47,19 @@ export class UserEntity {
   @Column({ default: false, name: 'is_phone_number_confirmed' })
   isPhoneNumberConfirmed: boolean;
 
-  @Field()
+  @Field({ nullable: true})
   @OneToOne(() => ProfileEntity)
   @JoinColumn({ name: 'profile_id' })
   profile: ProfileEntity;
 
-  @Field({ nullable: true })
+  @Field((type) => [UserTeamMetadata], { nullable: 'items' })
   @OneToMany(
     (type) => UserTeamMetadata,
     (userTeamMetadata) => userTeamMetadata.user,
   )
-  userTeamMetadata: UserTeamMetadata;
+  userTeamMetadata: UserTeamMetadata[];
 
+  @Field(()=> File,{nullable: true})
   @JoinColumn({ name: 'avatar_id' })
   @OneToOne(() => File, { eager: true, nullable: true })
   public avatar?: File;

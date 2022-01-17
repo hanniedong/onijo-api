@@ -11,11 +11,8 @@ import { UserTeamMetadata } from 'src/database/entities/user-team-metadata.entit
 import { TeamEntity } from 'src/database/entities/team.entity';
 import { GetUserArgs } from './dto/args/get-user.args';
 import { GetUserAvatarArgs } from './dto/args/get-user-avatar.args';
-// import { GetUserArgs } from "./dto/args/get-user.args";
-// import { GetUsersArgs } from "./dto/args/get-users.args";
-// import { CreateUserInput } from "./dto/input/create-user.input";
-// import { DeleteUserInput } from "./dto/input/delete-user.input";
-// import { UpdateUserInput } from "./dto/input/update-user.input";
+import { ElasticSearchService } from 'src/elastic-search/elastic-search.service';
+import { USERS_INDEX } from './users.constants';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +26,7 @@ export class UsersService {
     @InjectRepository(ProfileEntity)
     private readonly profileRepo: Repository<ProfileEntity>,
     private readonly filesService: FilesService,
+    private readonly elasticSearchService: ElasticSearchService,
   ) {}
 
   async createUser(createUserData) {
@@ -94,9 +92,38 @@ export class UsersService {
   }
 
   async findUser(options): Promise<any> {
-    const user = await this.userRepo.findOne(options);
+    const user = await this.userRepo.findOne(options, { relations: [
+      'profile',
+      'userTeamMetadata',
+      'userTeamMetadata.team',
+      'userTeamMetadata.team.organization',
+    ],});
     return user;
   }
+
+  async addUserToElasticSearch(args): Promise<any> {
+    try {
+      const user = await this.userRepo.findOne(args, { relations: [
+        'profile',
+        'userTeamMetadata',
+        'userTeamMetadata.team',
+        'userTeamMetadata.team.organization',
+      ],});
+  
+      const userData = {
+        id: user.id,
+        uuid: user.uuid,
+        avatar: user.avatar,
+        profile: user.profile,
+        userTeamMetadata: user.userTeamMetadata, 
+      }
+  
+     return await this.elasticSearchService.upsertDocument(USERS_INDEX, user.id, userData)
+    } catch(e){
+      throw e
+    }
+  }
+
 
   async getUserAvatar(userAvatarArgs: GetUserAvatarArgs): Promise<any> {
     return await this.userRepo.findOne({ where: userAvatarArgs });
@@ -115,28 +142,102 @@ export class UsersService {
     return avatar;
   }
 
-  public async getUsers(query): Promise<UserEntity[]> {
-    console.log(query);
-    return await this.userRepo.find({
-      where: { profile: { firstName: query } },
-      relations: ['profile', 'userTeamMetadata', 'userTeamMetadata.team'],
-         join: {
-        alias: "person",
-        leftJoinAndSelect: {
-            "homes": "person.homes",
-            "homeType": "homes.homeType"
-        }
-    }
+  public async searchUsers(query): Promise<any> {
+    const { body } = await this.elasticSearchService.search({
+      index: USERS_INDEX,
+      body: {
+        query: {
+          multi_match: {
+            query: query,
+            fields: [
+              'profile.firstName.keyword',
+              'profile.lastName.keyword',
+              'userTeamMetadata.team.displayName.keyword',
+              'profile.job.keyword',
+              'profile.company.keyword',
+            ],
+          },
+        },
+      },
     });
+    const users = body.hits.hits.map((result) => ({
+      id: result._source.id,
+      uuid: result._source.uuid,
+      avatar: result._source.avatar,
+      profile: result._source.profile,
+      userTeamMetadata: result._source.userTeamMetadata,
+    }));
+    return users;
   }
 
-  // public deleteUser(deleteUserData): UserEntity {
-  //   const userIndex = this.users.findIndex(user => user.id === deleteUserData.userId);
+  public async getUsers(userIds): Promise<any> {
+    const { body } = await this.elasticSearchService.search({
+      index: USERS_INDEX,
+      body: {
+        query: {
+          bool:{
+            must: {
+              terms:{
+                "uuid.keyword": userIds
+            }
+          }
+        }
+      },
+    },
+  });
+    const users = body.hits.hits.map((result) => ({
+      id: result._source.id,
+      uuid: result._source.uuid,
+      avatar: result._source.avatar,
+      profile: result._source.profile,
+      userTeamMetadata: result._source.userTeamMetadata,
+    }));
+    return users;
+  }
 
-  //   const user = this.users[userIndex];
+  public async getAllUsers(): Promise<any> {
+    const { body } = await this.elasticSearchService.search({
+      index: USERS_INDEX,
+      sort: ["profile.firstName.keyword:asc"]
+    });
+    const users = body.hits.hits.map((result) => ({
+      id: result._source.id,
+      uuid: result._source.uuid,
+      avatar: result._source.avatar,
+      profile: result._source.profile,
+      userTeamMetadata: result._source.userTeamMetadata,
+    }));
+    return users;
+  }
 
-  //   this.users.splice(userIndex);
+  public async populateUsersInElasticSearch(): Promise<any> {
+    const users = await this.userRepo.find({
+      relations: [
+        'profile',
+        'userTeamMetadata',
+        'userTeamMetadata.team',
+        'userTeamMetadata.team.organization',
+      ],
+    });
+    const { body: doesUserIndexExist } =
+      await this.elasticSearchService.checkIndexExists(USERS_INDEX);
+    if (doesUserIndexExist) {
+      await this.elasticSearchService.deleteIndices(USERS_INDEX);
+    }
 
-  //   return user;
-  // }
+    const usersData = users.map((user)=> ({
+      id: user.id,
+      uuid: user.uuid,
+      avatar: user.avatar,
+      profile: user.profile,
+      userTeamMetadata: user.userTeamMetadata, 
+    }))
+
+    await this.elasticSearchService.createIndices(USERS_INDEX, {});
+    const usersBulkUpload = await this.elasticSearchService.bulkUpload(
+      usersData,
+      USERS_INDEX,
+    );
+    return usersBulkUpload;
+  }
 }

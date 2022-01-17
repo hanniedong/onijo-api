@@ -62,12 +62,6 @@ export class ProfilesService {
   }
 
   public async getProfiles(query): Promise<ProfileEntity[]> {
-    console.log(query);
-    console.log(
-      await this.userProfileRepo.find({
-        where: { firstName: query },
-      }),
-    );
     return await this.userProfileRepo.find({
       where: { firstName: query },
     });

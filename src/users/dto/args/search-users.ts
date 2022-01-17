@@ -2,8 +2,8 @@ import { ArgsType, Field } from '@nestjs/graphql';
 import { IsNotEmpty } from 'class-validator';
 
 @ArgsType()
-export class GetUsersArgs {
-  @Field(type => [String])
+export class SearchUsersArgs {
+  @Field()
   @IsNotEmpty()
-  userIds: String[];
+  query: string;
 }
