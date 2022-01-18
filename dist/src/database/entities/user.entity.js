@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserEntity = void 0;
 const typeorm_1 = require("typeorm");
@@ -48,7 +49,7 @@ __decorate([
         name: 'password_last_updated_at',
         nullable: true,
     }),
-    __metadata("design:type", Date)
+    __metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
 ], UserEntity.prototype, "passwordLastUpdatedAt", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false, name: 'is_phone_number_confirmed' }),
@@ -73,11 +74,11 @@ __decorate([
 ], UserEntity.prototype, "avatar", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamptz', name: 'created_at' }),
-    __metadata("design:type", Date)
+    __metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
 ], UserEntity.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: 'timestamptz', name: 'updated_at' }),
-    __metadata("design:type", Date)
+    __metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
 ], UserEntity.prototype, "updatedAt", void 0);
 UserEntity = __decorate([
     (0, typeorm_1.Entity)('users'),

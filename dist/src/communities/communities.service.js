@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommunitiesService = void 0;
 const common_1 = require("@nestjs/common");
@@ -90,9 +91,7 @@ let CommunitiesService = class CommunitiesService {
 };
 CommunitiesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [elastic_search_service_1.ElasticSearchService,
-        axios_1.HttpService,
-        config_1.ConfigService])
+    __metadata("design:paramtypes", [elastic_search_service_1.ElasticSearchService, typeof (_a = typeof axios_1.HttpService !== "undefined" && axios_1.HttpService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object])
 ], CommunitiesService);
 exports.CommunitiesService = CommunitiesService;
 //# sourceMappingURL=communities.service.js.map

@@ -11,12 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommunitiesResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const community_entity_1 = require("./entities/community.entity");
 const communities_service_1 = require("./communities.service");
 const get_communities_args_1 = require("./dto/args/get-communities.args");
+const gql_auth_guard_1 = require("../auth/guards/gql-auth.guard");
 let CommunitiesResolver = class CommunitiesResolver {
     constructor(communitiesService) {
         this.communitiesService = communitiesService;
@@ -44,13 +46,13 @@ __decorate([
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_communities_args_1.GetCommunitiesArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_a = typeof Promise !== "undefined" && Promise) === "function" ? _a : Object)
 ], CommunitiesResolver.prototype, "searchCommunites", null);
 __decorate([
     (0, graphql_1.Query)(() => [community_entity_1.Community], { name: 'getCommunities', nullable: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
 ], CommunitiesResolver.prototype, "getCommunities", null);
 CommunitiesResolver = __decorate([
     (0, graphql_1.Resolver)(() => community_entity_1.Community),

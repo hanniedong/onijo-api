@@ -11,12 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const users_service_1 = require("./users.service");
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
+const requestWithUser_interface_1 = __importDefault(require("../auth/interface/requestWithUser.interface"));
 const multer_1 = require("multer");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const user_create_dto_1 = require("./dto/user.create.dto");

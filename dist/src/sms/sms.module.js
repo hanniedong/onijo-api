@@ -10,6 +10,7 @@ exports.SmsModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const users_module_1 = require("../users/users.module");
+const users_service_1 = require("../users/users.service");
 const sms_service_1 = require("./sms.service");
 const sms_controller_1 = require("./sms.controller");
 let SmsModule = class SmsModule {

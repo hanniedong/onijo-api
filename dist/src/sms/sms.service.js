@@ -11,10 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SmsService = void 0;
 const common_1 = require("@nestjs/common");
 const nestjs_twilio_1 = require("nestjs-twilio");
+const users_service_1 = require("../users/users.service");
+const user_entity_1 = require("../database/entities/user.entity");
 let SmsService = class SmsService {
     constructor(twilioClient) {
         this.twilioClient = twilioClient;
@@ -54,7 +57,7 @@ let SmsService = class SmsService {
 SmsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, nestjs_twilio_1.InjectTwilio)()),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof nestjs_twilio_1.TwilioClient !== "undefined" && nestjs_twilio_1.TwilioClient) === "function" ? _a : Object])
 ], SmsService);
 exports.SmsService = SmsService;
 //# sourceMappingURL=sms.service.js.map

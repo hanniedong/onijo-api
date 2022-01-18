@@ -11,11 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SmsController = void 0;
 const common_1 = require("@nestjs/common");
 const sms_service_1 = require("./sms.service");
 const initate_phone_number_verification_dto_1 = require("./dto/initate-phone-number-verification.dto");
+const requestWithUser_interface_1 = __importDefault(require("../auth/interface/requestWithUser.interface"));
 const verification_code_dto_1 = require("./dto/verification-code.dto");
 const users_service_1 = require("../users/users.service");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
@@ -57,7 +62,7 @@ __decorate([
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [initate_phone_number_verification_dto_1.InitiatePhoneNumberVerificationDto, Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_a = typeof Promise !== "undefined" && Promise) === "function" ? _a : Object)
 ], SmsController.prototype, "initiatePhoneNumberVerification", null);
 __decorate([
     (0, common_1.Post)('confirm-verification'),
@@ -65,7 +70,7 @@ __decorate([
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [verification_code_dto_1.VerificationCodeDto, Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
 ], SmsController.prototype, "confirmPhoneNumber", null);
 SmsController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

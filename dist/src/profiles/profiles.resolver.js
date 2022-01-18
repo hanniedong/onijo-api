@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfilesResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
@@ -30,7 +31,7 @@ __decorate([
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_user_profile_args_1.GetUserProfileArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_a = typeof Promise !== "undefined" && Promise) === "function" ? _a : Object)
 ], ProfilesResolver.prototype, "getUserProfile", null);
 ProfilesResolver = __decorate([
     (0, graphql_1.Resolver)(() => profile_entity_1.ProfileEntity),

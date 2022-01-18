@@ -11,10 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersResolver = void 0;
 const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
+const user_interface_1 = require("../interfaces/user.interface");
 const gql_auth_guard_1 = require("../auth/guards/gql-auth.guard");
 const user_entity_1 = require("../database/entities/user.entity");
 const get_user_args_1 = require("./dto/args/get-user.args");
@@ -24,6 +26,7 @@ const user_team_metadata_entity_1 = require("../database/entities/user-team-meta
 const file_entity_1 = require("../database/entities/file.entity");
 const get_user_avatar_args_1 = require("./dto/args/get-user-avatar.args");
 const search_users_1 = require("./dto/args/search-users");
+const profile_entity_1 = require("../database/entities/profile.entity");
 let UsersResolver = class UsersResolver {
     constructor(usersService) {
         this.usersService = usersService;
@@ -81,14 +84,14 @@ __decorate([
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_user_args_1.GetUserArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_a = typeof Promise !== "undefined" && Promise) === "function" ? _a : Object)
 ], UsersResolver.prototype, "getUser", null);
 __decorate([
     (0, graphql_1.Mutation)(() => user_entity_1.UserEntity, { name: 'addUserToElasticSearch', nullable: true }),
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_user_args_1.GetUserArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object)
 ], UsersResolver.prototype, "addUserToElasticSearch", null);
 __decorate([
     (0, graphql_1.Query)(() => file_entity_1.File, { name: 'userAvatar', nullable: true }),
@@ -96,7 +99,7 @@ __decorate([
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_user_avatar_args_1.GetUserAvatarArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
 ], UsersResolver.prototype, "getUserAvatar", null);
 __decorate([
     (0, graphql_1.Query)(() => [user_team_metadata_entity_1.UserTeamMetadata], { name: 'userTeamMetadata', nullable: true }),
@@ -104,7 +107,7 @@ __decorate([
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_user_args_1.GetUserArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_d = typeof Promise !== "undefined" && Promise) === "function" ? _d : Object)
 ], UsersResolver.prototype, "getUserTeams", null);
 __decorate([
     (0, graphql_1.Query)(() => [user_entity_1.UserEntity], { name: 'searchUsers', nullable: true }),
@@ -112,7 +115,7 @@ __decorate([
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [search_users_1.SearchUsersArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
 ], UsersResolver.prototype, "searchUsers", null);
 __decorate([
     (0, graphql_1.Query)(() => [user_entity_1.UserEntity], { name: 'getUsersByIds', nullable: true }),
@@ -120,14 +123,14 @@ __decorate([
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_users_args_1.GetUsersArgs]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
 ], UsersResolver.prototype, "getUsers", null);
 __decorate([
     (0, graphql_1.Query)(() => [user_entity_1.UserEntity], { name: 'getUsers', nullable: true }),
     (0, common_1.UseGuards)(gql_auth_guard_1.GqlAuthGuard),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", typeof (_g = typeof Promise !== "undefined" && Promise) === "function" ? _g : Object)
 ], UsersResolver.prototype, "getAllUsers", null);
 UsersResolver = __decorate([
     (0, graphql_1.Resolver)(() => user_entity_1.UserEntity),

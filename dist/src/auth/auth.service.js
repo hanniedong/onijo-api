@@ -27,12 +27,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
+const user_mapper_1 = require("../mappers/user.mapper");
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
+const password_utils_1 = require("../utils/password.utils");
 const users_service_1 = require("../users/users.service");
 const auth_constants_1 = require("./auth.constants");
+const login_interface_1 = require("../interfaces/login.interface");
+const user_entity_1 = require("../database/entities/user.entity");
 const bcrypt = __importStar(require("bcrypt"));
 let AuthService = class AuthService {
     constructor(usersService, jwtService) {
@@ -72,8 +77,7 @@ let AuthService = class AuthService {
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [users_service_1.UsersService,
-        jwt_1.JwtService])
+    __metadata("design:paramtypes", [users_service_1.UsersService, typeof (_a = typeof jwt_1.JwtService !== "undefined" && jwt_1.JwtService) === "function" ? _a : Object])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map
