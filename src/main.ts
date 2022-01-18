@@ -11,6 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['warn', 'error', 'log'],
   });
+
   Sentry.init({
     dsn: process.env.SENTRY_URL,
     environment: process.env.ENV_NAME,
@@ -30,10 +31,10 @@ async function bootstrap() {
         enableImplicitConversion: true,
       },
     }),
-  );
+  ); 
 
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 4040;
-  await app.listen(port);
+  await app.listen(port)
 }
 bootstrap();

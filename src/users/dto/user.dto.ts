@@ -8,6 +8,9 @@ export class UserDto {
   @IsEmail()
   email: string;
 
+  @IsNotEmpty()
+  uuid: string;
+
   phoneNumber: string;
 
   createdOn?: Date;

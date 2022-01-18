@@ -6,17 +6,18 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  Unique,
 } from 'typeorm';
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
 import { UserEntity } from './user.entity';
 import { TeamEntity } from './team.entity';
 
 @Entity('user_team_metadata')
 @ObjectType()
+@Unique('user_team_exists', ['user', 'team'])
 export class UserTeamMetadata {
-
   @PrimaryGeneratedColumn()
-  @Field()
+  @Field({ nullable: true })
   id: number;
 
   @Column({ type: 'integer', nullable: true, name: 'year_joined' })
@@ -27,15 +28,15 @@ export class UserTeamMetadata {
   @Field()
   yearEnded: number;
 
-  @ManyToOne(type => UserEntity, user => user.id)
+  @ManyToOne((type) => UserEntity, (user) => user.userTeamMetadata)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 
-  @Field()
-  @ManyToOne(type => TeamEntity, team => team.id)
+  @Field(() => TeamEntity, { nullable: true})
+  @ManyToOne((type) => TeamEntity, (team) => team.userTeamMetadata)
   @JoinColumn({ name: 'team_id', referencedColumnName: 'id' })
   team: TeamEntity;
-  s
+
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 

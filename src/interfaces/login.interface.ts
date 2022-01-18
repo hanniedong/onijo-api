@@ -1,5 +1,6 @@
 export interface LoginInterface {
   username: string;
-  accessToken: string;
-  id: string;
+  token: string;
+  id: number;
+  uuid: string
 }
