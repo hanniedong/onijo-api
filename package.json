@@ -29,7 +29,7 @@
     "typeorm:migrate:down": "npm run typeorm migration:revert",
     "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
-    "deploy": "npm ci && npm run build --max_old_space_size=4096 && npm run start:prod"
+    "deploy": "npm run build && npm run start:prod"
   },
   "dependencies": {
     "@apollo/gateway": "^0.38.2",
