@@ -1,1 +1,0 @@
-{"version":3,"file":"create-teams.seed.js","sourceRoot":"","sources":["../../../../src/database/seeds/create-teams.seed.ts"],"names":[],"mappings":";;AAAA,yDAAoD;AAGpD,MAAqB,WAAW;IACvB,KAAK,CAAC,GAAG,CAAC,OAAgB;QAC/B,MAAM,OAAO,CAAC,wBAAU,CAAC,EAAE,CAAC,UAAU,CAAC,GAAG,CAAC,CAAA;IAC7C,CAAC;CACF;AAJD,8BAIC"}
