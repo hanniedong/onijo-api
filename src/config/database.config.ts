@@ -7,7 +7,7 @@ export const defaults = {
   database: process.env.DB_DATABASE || 'onijo_db',
   logging: process.env.DB_LOGGING || true,
   ssl: process.env.DB_USE_SSL === 'true' ? { rejectUnauthorized: false } : false,
-  synchronize: false,
+  synchronize: true,
   seeds: [__dirname + ' /../database/seeds/**/*.seed.ts'],
   factories: [__dirname + '/../database/factories/**/*.factory.ts'],
   entities: [__dirname + '/../database/entities/*.entity{.ts,.js}'],
@@ -17,6 +17,8 @@ export const defaults = {
     "subscribersDir": "src/subscriber"
   }
 };
+
+console.log(__dirname + '/../migration/**/*{.ts,.js}')
 
 export const getDatabaseConfig = (): object => {
   return defaults;
