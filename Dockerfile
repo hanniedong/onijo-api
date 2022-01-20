@@ -1,4 +1,4 @@
-FROM node:14.18.1-slim
+FROM node:14.18-slim
 EXPOSE 7000
 
 WORKDIR /usr/src/app
