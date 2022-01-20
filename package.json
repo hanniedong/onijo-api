@@ -31,7 +31,7 @@
     "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
     "deploy": "npm ci && npm run build && npm run start:prod",
-    "postinstall": "npm run prestart:prod"
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@apollo/gateway": "^0.38.2",
