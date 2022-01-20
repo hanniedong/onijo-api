@@ -29,7 +29,8 @@
     "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
     "deploy": "npm ci && npm run build && npm run start:prod",
-    "start:prod": "npm run build && node --max-old-space-size=4096 dist/main"
+    "postinstall": "tsc",
+    "start:prod": "node dist/index.js"
   },
   "dependencies": {
     "@apollo/gateway": "^0.38.2",

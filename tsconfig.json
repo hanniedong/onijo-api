@@ -3,7 +3,7 @@
     "target": "es2017",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./dist",
+    "outDir": "dist",
     "baseUrl": "./",
     "removeComments": true,
     "emitDecoratorMetadata": true,
