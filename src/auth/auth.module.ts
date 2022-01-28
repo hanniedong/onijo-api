@@ -7,11 +7,17 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtSecret } from './auth.constants';
 import { LocalStrategy } from './strategies/local.strategy';
+import { AuthResolver } from './auth.resolver';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from 'src/database/entities/user.entity';
 
 TODO: 'REVIST SECRET AND SIGNOOPTIONS'
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([
+      UserEntity,
+    ]),
     UsersModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
@@ -24,6 +30,6 @@ TODO: 'REVIST SECRET AND SIGNOOPTIONS'
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, LocalStrategy],
+  providers: [AuthService, JwtStrategy, LocalStrategy, AuthResolver],
 })
 export class AuthModule { }

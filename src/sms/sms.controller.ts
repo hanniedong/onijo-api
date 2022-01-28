@@ -16,7 +16,6 @@ export class SmsController {
     @Body() phoneNumber: InitiatePhoneNumberVerificationDto,
     @Req() request: RequestWithUser): Promise<any> {
     try {
-      console.log(request)
       if (request.user.isPhoneNumberConfirmed) {
         throw new BadRequestException('Phone number already confirmed');
       }
@@ -27,13 +26,13 @@ export class SmsController {
   }
 
   @Post('confirm-verification')
-  async confirmPhoneNumber(
+  async confirmPhoneNumberVerification(
     @Body() verificationCodeDto: VerificationCodeDto,
     @Req() request: RequestWithUser): Promise<any> {
     try {
       const userId = request.user.id
       const { phoneNumber, verificationCode } = verificationCodeDto
-      const phoneNumberConfirmation = await this.smsService.confirmPhoneNumber(phoneNumber, verificationCode);
+      const phoneNumberConfirmation = await this.smsService.verifyPhoneNumber(phoneNumber, verificationCode);
       if (phoneNumberConfirmation?.valid) {
         await this.usersService.updateUserPhoneNumberConfirmation(userId)
       }

@@ -7,14 +7,27 @@ import { UserInterface } from '../interfaces/user.interface';
 import { LoginInterface } from 'src/interfaces/login.interface';
 import { UserEntity } from 'src/database/entities/user.entity';
 import * as bcrypt from 'bcryptjs'
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    @InjectRepository(UserEntity)
+    private readonly userRepo: Repository<UserEntity>,
   ) { }
 
+  async updatePassword(password: string, user: UserEntity) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    try {
+      return await this.userRepo.save(user);
+    } catch (e) {
+      throw (e)
+    }
+  }
   async validate(email: string, password: string): Promise<UserEntity> | null {
     const user = await this.usersService.findUser({ email: email });
 
@@ -30,7 +43,7 @@ export class AuthService {
       email: user.email,
       sub: user.id
     }
-    
+
     return {
       token: this.jwtService.sign(payload),
       username: user.username,
