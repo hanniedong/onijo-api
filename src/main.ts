@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as Sentry from '@sentry/node';
 import { AppModule } from './app.module';
+import { config } from 'aws-sdk';
 
 const API_VERSION = 'api/v1';
 
@@ -34,6 +35,13 @@ async function bootstrap() {
   ); 
 
   const configService = app.get(ConfigService);
+  config.update({
+    accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
+    secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
+    region: configService.get('AWS_REGION'),
+  });
+ 
+
   const port = configService.get('PORT')
   await app.listen(port || 4040)
 }

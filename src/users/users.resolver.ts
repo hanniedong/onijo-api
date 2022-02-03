@@ -5,9 +5,6 @@ import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { UserEntity } from '../database/entities/user.entity';
 import { GetUserArgs } from './dto/args/get-user.args';
 import { GetUsersArgs } from './dto/args/get-users.args';
-// import { GetUsersArgs } from "./dto/args/get-users.args";
-// import { DeleteUserInput } from "./dto/input/delete-user.input";
-// import { UpdateUserInput } from "./dto/input/update-user.input";
 
 import { UsersService } from './users.service';
 import { UserTeamMetadata } from 'src/database/entities/user-team-metadata.entity';
@@ -29,7 +26,6 @@ export class UsersResolver {
   @Mutation(() => UserEntity, { name: 'addUserToElasticSearch', nullable: true })
   // @UseGuards(GqlAuthGuard)
   async addUserToElasticSearch(@Args() getUserArgs: GetUserArgs): Promise<UserInterface> {
-    console.log(await this.usersService.addUserToElasticSearch(getUserArgs))
     return await this.usersService.addUserToElasticSearch(getUserArgs);
   }
 
@@ -85,12 +81,4 @@ export class UsersResolver {
       throw e;
     }
   }
-  // @Query(() => [User], { name: 'users', nullable: 'items' })
-  // getUsers(@Args() getUsersArgs: GetUsersArgs): User[] {
-  //   return this.usersService.getUsers(getUsersArgs);
-  // }
-
-  // @Mutation(() => User)
-  // deleteUser(@Args('deleteUserData') deleteUserData: DeleteUserInput): User {
-  //   return this.usersService.deleteUser(deleteUserData);
 }
