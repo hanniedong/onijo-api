@@ -1,12 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
+import { TwilioClient } from 'nestjs-twilio';
 
 @Injectable()
 export class SmsService {
-  constructor(
-    @InjectTwilio()
-    private readonly twilioClient: TwilioClient,
-  ) { }
+  constructor(private readonly twilioClient: TwilioClient) { }
 
   async sendSMS() {
     try {

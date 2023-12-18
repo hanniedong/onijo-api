@@ -15,12 +15,10 @@ export class ProfilesService {
     @InjectRepository(ProfileEntity)
     private readonly userProfileRepo: Repository<ProfileEntity>,
     private readonly filesService: FilesService,
-  ) {}
+  ) { }
 
   async upsertProfile(profileData, userId) {
-    const user = await this.userRepo.findOne(userId, {
-      relations: ['profile'],
-    });
+    const user = await this.userRepo.findOne({ where: { id: userId }, relations: ['profile'] });
 
     const profile: ProfileEntity = {
       ...user.profile,
@@ -35,9 +33,8 @@ export class ProfilesService {
   async getProfile(args: GetUserProfileArgs): Promise<ProfileEntity> {
     try {
       const { userId } = args;
-      const user = await this.userRepo.findOne(userId, {
-        relations: ['profile'],
-      });
+      const user = await this.userRepo.findOne({ where: { id: userId }, relations: ['profile'] });
+
       if (user?.profile) {
         return user.profile;
       }
@@ -51,9 +48,9 @@ export class ProfilesService {
       imageBuffer,
       filename,
     );
-    const user = await this.userRepo.findOne(userId, {
-      relations: ['profile'],
-    });
+    const user = await this.userRepo.findOne({ where: { id: userId }, relations: ['profile'] });
+
+
     await this.userRepo.update(userId, {
       ...user,
       avatar,

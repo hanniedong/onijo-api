@@ -2,6 +2,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { ApolloDriver } from '@nestjs/apollo';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -24,12 +26,13 @@ import { CommunitiesModule } from './communities/communities.module';
     ConfigModule.forRoot({ load: [getDatabaseConfig] }),
     AuthModule,
     UsersModule,
-    SmsModule,
+    // SmsModule,
     FilesModule,
     TeamsModule,
     ProfilesModule,
     TypeOrmModule.forRoot(getDatabaseConfig()),
     GraphQLModule.forRoot({
+      driver: ApolloDriver,
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       debug: true,
@@ -38,10 +41,10 @@ import { CommunitiesModule } from './communities/communities.module';
         headers: req.headers,
       }),
     }),
-    TwilioModule.forRoot({
-      accountSid: process.env.TWILIO_ACCOUNT_SID,
-      authToken: process.env.TWILIO_AUTH_TOKEN,
-    }),
+    // TwilioModule.forRoot({
+    //   accountSid: process.env.TWILIO_ACCOUNT_SID,
+    //   authToken: process.env.TWILIO_AUTH_TOKEN,
+    // }),
   ],
   providers: [AppService],
 })

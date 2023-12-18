@@ -86,13 +86,13 @@ export class UsersService {
   async getUserTeamMetadata(args: GetUserArgs): Promise<UserTeamMetadata[]> {
     const { id } = args;
     return await this.userTeamMetadataRepo.find({
-      where: { user: id },
+      where: { id: id },
       relations: ['team', 'team.organization'],
     });
   }
 
   async findUser(options): Promise<any> {
-    const user = await this.userRepo.findOne(options, { relations: [
+    const user = await this.userRepo.findOne( { ...options, relations: [
       'profile',
       'userTeamMetadata',
       'userTeamMetadata.team',
@@ -103,7 +103,7 @@ export class UsersService {
 
   async addUserToElasticSearch(args): Promise<any> {
     try {
-      const user = await this.userRepo.findOne(args, { relations: [
+      const user = await this.userRepo.findOne( { ...args, relations: [
         'profile',
         'userTeamMetadata',
         'userTeamMetadata.team',
